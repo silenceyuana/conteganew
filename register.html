@@ -8,7 +8,6 @@
     <link rel="icon" type="image/x-icon" href="images/1.png">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- 注册页面专属样式 -->
     <style>
         .register-section {
             min-height: 100vh;
@@ -20,169 +19,64 @@
         
         .register-wrapper {
             width: 100%;
-            max-width: 480px; /* 比登录框稍微宽一点 */
+            max-width: 480px;
             padding: 40px 30px;
         }
 
-        .register-header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
+        .register-header { text-align: center; margin-bottom: 25px; }
         .register-header h2 {
-            font-size: 1.8rem;
-            margin-bottom: 8px;
+            font-size: 1.8rem; margin-bottom: 8px;
             background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
+        .register-header p { color: var(--ios-text-secondary); font-size: 0.9rem; }
 
-        .register-header p {
-            color: var(--ios-text-secondary);
-            font-size: 0.9rem;
-        }
+        .step-indicator { display: flex; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        .step-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(0,0,0,0.1); transition: all 0.3s; }
+        .step-dot.active { background: var(--ios-primary); transform: scale(1.2); box-shadow: 0 0 10px rgba(13, 148, 136, 0.3); }
 
-        /* 步骤指示器 */
-        .step-indicator {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .step-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(0,0,0,0.1);
-            transition: all 0.3s;
-        }
-        .step-dot.active {
-            background: var(--ios-primary);
-            transform: scale(1.2);
-            box-shadow: 0 0 10px rgba(13, 148, 136, 0.3);
-        }
-
-        /* 输入框样式复用 */
         .form-group { margin-bottom: 15px; }
-        .form-group label {
-            display: block;
-            margin-bottom: 6px;
-            color: var(--ios-text-secondary);
-            font-size: 0.85rem;
-            font-weight: 500;
-            margin-left: 5px;
-        }
+        .form-group label { display: block; margin-bottom: 6px; color: var(--ios-text-secondary); font-size: 0.85rem; font-weight: 500; margin-left: 5px; }
 
         .input-wrapper { position: relative; }
-        .input-wrapper i {
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--ios-primary);
-            opacity: 0.7;
-            font-size: 0.9rem;
-        }
+        .input-wrapper i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--ios-primary); opacity: 0.7; font-size: 0.9rem; }
 
         .ios-input {
-            width: 100%;
-            padding: 12px 12px 12px 40px;
-            background: var(--input-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            font-size: 0.95rem;
-            color: var(--ios-text-primary);
-            transition: all 0.3s ease;
-            outline: none;
+            width: 100%; padding: 12px 12px 12px 40px; background: var(--input-bg);
+            border: 1px solid var(--glass-border); border-radius: 14px;
+            font-size: 0.95rem; color: var(--ios-text-primary); transition: all 0.3s ease; outline: none;
         }
-        .ios-input:focus {
-            border-color: var(--ios-primary);
-            background: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
-        }
+        .ios-input:focus { border-color: var(--ios-primary); background: rgba(255, 255, 255, 0.8); box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15); }
 
-        /* 验证码输入框特殊样式 */
-        #verificationCode {
-            letter-spacing: 5px;
-            font-family: monospace;
-            font-weight: bold;
-            text-align: center;
-            padding-left: 12px; /* 居中不需要左侧padding留给图标 */
-        }
+        #verificationCode { letter-spacing: 5px; font-family: monospace; font-weight: bold; text-align: center; padding-left: 12px; }
 
-        .resend-container {
-            text-align: center;
-            margin-top: 1.5rem;
-            font-size: 0.85rem;
-            color: var(--ios-text-secondary);
-        }
-        .action-link {
-            background: none;
-            border: none;
-            color: var(--ios-primary);
-            cursor: pointer;
-            font-weight: 600;
-            padding: 0;
-            transition: opacity 0.2s;
-        }
-        .action-link:hover { opacity: 0.8; }
-        .action-link:disabled {
-            color: var(--ios-text-secondary);
-            cursor: not-allowed;
-            opacity: 0.6;
-        }
+        .resend-container { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--ios-text-secondary); }
+        .action-link { background: none; border: none; color: var(--ios-primary); cursor: pointer; font-weight: 600; padding: 0; }
+        .action-link:disabled { color: var(--ios-text-secondary); cursor: not-allowed; opacity: 0.6; }
 
-        .login-footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.85rem;
-            color: var(--ios-text-secondary);
-            border-top: 1px solid var(--glass-border);
-            padding-top: 15px;
-        }
+        .login-footer { text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--ios-text-secondary); border-top: 1px solid var(--glass-border); padding-top: 15px; }
         .login-footer a { color: var(--ios-primary); font-weight: 600; }
         
-        .message {
-            font-weight: 600;
-            font-size: 0.85rem;
-            padding: 10px;
-            border-radius: 10px;
-            text-align: center;
-            margin-top: 15px;
-            min-height: 20px;
-        }
+        .message { font-weight: 600; font-size: 0.85rem; padding: 10px; border-radius: 10px; text-align: center; margin-top: 15px; min-height: 20px; }
     </style>
 </head>
 <body>
 
-    <!-- 1. 动态流体背景 -->
     <div class="ios-background-mesh"></div>
 
     <header>
-        <!-- 2. 导航栏 -->
         <nav class="navbar">
             <div class="nav-logo">
-                <a href="index.html">
-                    <i class="fas fa-cube"></i>
-                    <span>CONTEGA</span>
-                </a>
+                <a href="index.html"><i class="fas fa-cube"></i><span>CONTEGA</span></a>
             </div>
-            
             <ul class="nav-menu">
                 <li class="nav-item"><a href="index.html" class="nav-link">返回主界</a></li>
                 <li class="nav-item"><a href="login.html" class="nav-link">已有账号</a></li>
             </ul>
-
-            <div class="menu-toggle">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
         </nav>
     </header>
 
     <section class="register-section">
-        <!-- 3. 玻璃拟态卡片 -->
         <div class="glass-card register-wrapper hover-lift">
             
             <!-- 步骤 1: 注册表单 -->
@@ -232,7 +126,7 @@
                 </form>
             </div>
 
-            <!-- 步骤 2: 验证码表单 (初始隐藏) -->
+            <!-- 步骤 2: 验证码表单 -->
             <div id="verification-step" style="display: none;">
                 <div class="register-header">
                     <h2><i class="fas fa-shield-alt"></i> 身份核验</h2>
@@ -248,7 +142,6 @@
                     <div class="form-group">
                         <label for="verificationCode" style="text-align: center;">输入验证代码</label>
                         <div class="input-wrapper">
-                            <!-- 这里的图标可以去掉，因为验证码通常是居中的 -->
                             <input type="text" id="verificationCode" class="ios-input" required placeholder="------" maxlength="6" pattern="\d{6}" inputmode="numeric">
                         </div>
                     </div>
@@ -272,199 +165,226 @@
         </div>
     </section>
 
-    <!-- 复用主脚本 (处理导航栏等) -->
+    <!-- 引用主脚本 -->
     <script src="script.js"></script>
 
-    <!-- 注册逻辑脚本 -->
+    <!-- ★★★ 修复后的注册逻辑脚本 ★★★ -->
     <script>
-        const registerStep = document.getElementById('registration-step');
-        const verificationStep = document.getElementById('verification-step');
-        const registerForm = document.getElementById('registerForm');
-        const verificationForm = document.getElementById('verificationForm');
-        const messageDiv = document.getElementById('formMessage');
-        const resendBtn = document.getElementById('resend-btn');
-        const backToRegisterLink = document.getElementById('back-to-register-link');
-        
-        let countdownTimer;
+        // 将所有逻辑包裹在 DOMContentLoaded 中，确保 HTML 加载完毕后再执行 JS
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Register script loaded.'); // 调试信息
 
-        // 辅助函数：显示消息（带颜色和图标）
-        const showMessage = (text, type = 'error') => {
-            messageDiv.textContent = text;
-            if (type === 'success') {
-                messageDiv.style.color = '#0d9488'; // Teal
-                messageDiv.style.background = 'rgba(13, 148, 136, 0.1)';
-            } else if (type === 'info') {
-                messageDiv.style.color = 'var(--ios-text-secondary)';
-                messageDiv.style.background = 'transparent';
-            } else {
-                messageDiv.style.color = '#ef4444'; // Red
-                messageDiv.style.background = 'rgba(239, 68, 68, 0.1)';
-                // 震动效果
-                const card = document.querySelector('.glass-card');
-                card.style.transform = 'translateX(5px)';
-                setTimeout(() => card.style.transform = 'translateX(-5px)', 100);
-                setTimeout(() => card.style.transform = 'none', 200);
-            }
-        };
-
-        const startResendCountdown = () => {
-            let seconds = 60;
-            resendBtn.disabled = true;
-            resendBtn.style.color = 'var(--ios-text-secondary)';
+            // 获取 DOM 元素
+            const registerStep = document.getElementById('registration-step');
+            const verificationStep = document.getElementById('verification-step');
+            const registerForm = document.getElementById('registerForm');
+            const verificationForm = document.getElementById('verificationForm');
+            const messageDiv = document.getElementById('formMessage');
+            const resendBtn = document.getElementById('resend-btn');
+            const backToRegisterLink = document.getElementById('back-to-register-link');
             
-            countdownTimer = setInterval(() => {
-                seconds--;
-                resendBtn.textContent = `${seconds}秒后重新请求`;
-                if (seconds <= 0) {
-                    clearInterval(countdownTimer);
-                    resendBtn.textContent = '重新发送验证码';
-                    resendBtn.disabled = false;
-                    resendBtn.style.color = 'var(--ios-primary)';
+            let countdownTimer;
+
+            // 1. 辅助函数：显示消息
+            const showMessage = (text, type = 'error') => {
+                messageDiv.textContent = text;
+                if (type === 'success') {
+                    messageDiv.style.color = '#0d9488';
+                    messageDiv.style.background = 'rgba(13, 148, 136, 0.1)';
+                } else if (type === 'info') {
+                    messageDiv.style.color = 'var(--ios-text-secondary)';
+                    messageDiv.style.background = 'transparent';
+                } else {
+                    messageDiv.style.color = '#ef4444';
+                    messageDiv.style.background = 'rgba(239, 68, 68, 0.1)';
+                    // 震动特效
+                    const card = document.querySelector('.glass-card');
+                    if(card) {
+                        card.style.transform = 'translateX(5px)';
+                        setTimeout(() => card.style.transform = 'translateX(-5px)', 100);
+                        setTimeout(() => card.style.transform = 'none', 200);
+                    }
                 }
-            }, 1000);
-        };
+            };
 
-        const goBackToRegisterStep = () => {
-            localStorage.removeItem('registrationData');
-            clearInterval(countdownTimer);
-            messageDiv.textContent = '';
-            messageDiv.style.background = 'transparent';
-            verificationStep.style.display = 'none';
-            registerStep.style.display = 'block';
-        };
+            // 2. 倒计时功能
+            const startResendCountdown = () => {
+                let seconds = 60;
+                if(resendBtn) {
+                    resendBtn.disabled = true;
+                    resendBtn.style.color = 'var(--ios-text-secondary)';
+                    
+                    countdownTimer = setInterval(() => {
+                        seconds--;
+                        resendBtn.textContent = `${seconds}秒后重新请求`;
+                        if (seconds <= 0) {
+                            clearInterval(countdownTimer);
+                            resendBtn.textContent = '重新发送验证码';
+                            resendBtn.disabled = false;
+                            resendBtn.style.color = 'var(--ios-primary)';
+                        }
+                    }, 1000);
+                }
+            };
 
-        backToRegisterLink.addEventListener('click', (e) => {
-            e.preventDefault();
-            goBackToRegisterStep();
-        });
-
-        const handleResendCode = async () => {
-            const registrationData = JSON.parse(localStorage.getItem('registrationData'));
-            if (!registrationData) {
-                showMessage('注册会话已过期，请重新填写信息。');
-                return;
-            }
-            resendBtn.disabled = true;
-            showMessage('正在重新请求数据包...', 'info');
-            
-            try {
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(registrationData)
-                });
-                const result = await response.json();
-                if (!response.ok) { throw new Error(result.error || '请求失败，网络波动。'); }
-                
-                showMessage('验证代码已重新发送！', 'success');
-                startResendCountdown();
-            } catch (error) {
-                showMessage(error.message);
-                resendBtn.disabled = false;
-            }
-        };
-
-        resendBtn.addEventListener('click', handleResendCode);
-
-        registerForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const username = document.getElementById('username').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
-            const submitButton = this.querySelector('button[type="submit"]');
-            const originalBtnText = submitButton.innerHTML;
-
-            if (password !== confirmPassword) {
-                showMessage('密钥不匹配，请核对后重新输入。');
-                return;
-            }
-
-            const registrationData = { player_name: username, email, password, confirmPassword };
-            
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 处理请求...';
-            messageDiv.textContent = '';
-            messageDiv.style.background = 'transparent';
-
-            try {
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(registrationData)
-                });
-                const result = await response.json();
-                if (!response.ok) { throw new Error(result.error || '无法发送验证码，请稍后再试。'); }
-                
-                showMessage('验证码已发送至终端，请查收！', 'success');
-                localStorage.setItem('registrationData', JSON.stringify(registrationData));
-                
-                // 切换步骤动画
-                registerStep.style.opacity = '0';
-                setTimeout(() => {
-                    registerStep.style.display = 'none';
-                    verificationStep.style.display = 'block';
-                    verificationStep.style.opacity = '0';
-                    setTimeout(() => verificationStep.style.opacity = '1', 50);
-                }, 300);
-
-                startResendCountdown();
-            } catch (error) {
-                showMessage(error.message);
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalBtnText;
-            }
-        });
-
-        verificationForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const registrationData = JSON.parse(localStorage.getItem('registrationData'));
-            if (!registrationData || !registrationData.email) {
-                showMessage('数据包丢失，请返回重新注册。');
-                return;
-            }
-            const code = document.getElementById('verificationCode').value.trim();
-            const submitButton = this.querySelector('button[type="submit"]');
-            const originalBtnText = submitButton.innerHTML;
-            
-            submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 正在写入档案...';
-            messageDiv.textContent = '';
-            messageDiv.style.background = 'transparent';
-
-            try {
-                const response = await fetch('/api/verify-email', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email: registrationData.email, code })
-                });
-                const result = await response.json();
-                if (!response.ok) { throw new Error(result.error || '验证失败，代码无效。'); }
-                
-                showMessage('档案建立成功！正在接入系统...', 'success');
+            // 3. 返回修改邮箱
+            const goBackToRegisterStep = () => {
                 localStorage.removeItem('registrationData');
                 clearInterval(countdownTimer);
-                setTimeout(() => { window.location.href = 'login.html'; }, 1500);
-            } catch (error) {
-                showMessage(error.message);
-                submitButton.disabled = false;
-                submitButton.innerHTML = originalBtnText;
+                messageDiv.textContent = '';
+                messageDiv.style.background = 'transparent';
+                verificationStep.style.display = 'none';
+                registerStep.style.display = 'block';
+            };
+
+            if(backToRegisterLink) {
+                backToRegisterLink.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    goBackToRegisterStep();
+                });
             }
-        });
 
-        document.addEventListener('DOMContentLoaded', () => {
-            // 简单的淡入动画
+            // 4. 重新发送验证码
+            if(resendBtn) {
+                resendBtn.addEventListener('click', async (e) => {
+                    e.preventDefault(); // 防止刷新
+                    const registrationData = JSON.parse(localStorage.getItem('registrationData'));
+                    if (!registrationData) {
+                        showMessage('注册会话已过期，请重新填写信息。');
+                        return;
+                    }
+                    resendBtn.disabled = true;
+                    showMessage('正在重新请求数据包...', 'info');
+                    
+                    try {
+                        const response = await fetch('/api/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(registrationData)
+                        });
+                        const result = await response.json();
+                        if (!response.ok) throw new Error(result.error || '请求失败，网络波动。');
+                        
+                        showMessage('验证代码已重新发送！', 'success');
+                        startResendCountdown();
+                    } catch (error) {
+                        showMessage(error.message);
+                        resendBtn.disabled = false;
+                    }
+                });
+            }
+
+            // 5. 【核心】注册表单提交 (发送验证码)
+            if (registerForm) {
+                registerForm.addEventListener('submit', async function(e) {
+                    // ★★★ 这里是最关键的一步：阻止表单默认提交 ★★★
+                    e.preventDefault(); 
+                    console.log("Form submitted via JS");
+
+                    const username = document.getElementById('username').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirmPassword').value;
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    const originalBtnText = submitButton.innerHTML;
+
+                    if (password !== confirmPassword) {
+                        showMessage('密钥不匹配，请核对后重新输入。');
+                        return;
+                    }
+
+                    const registrationData = { player_name: username, email, password, confirmPassword };
+                    
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 处理请求...';
+                    messageDiv.textContent = '';
+                    messageDiv.style.background = 'transparent';
+
+                    try {
+                        const response = await fetch('/api/register', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(registrationData)
+                        });
+                        const result = await response.json();
+                        if (!response.ok) throw new Error(result.error || '无法发送验证码，请稍后再试。');
+                        
+                        // 成功逻辑
+                        showMessage('验证码已发送至终端，请查收！', 'success');
+                        localStorage.setItem('registrationData', JSON.stringify(registrationData));
+                        
+                        // 切换步骤
+                        setTimeout(() => {
+                            registerStep.style.display = 'none';
+                            verificationStep.style.display = 'block';
+                        }, 500);
+
+                        startResendCountdown();
+                    } catch (error) {
+                        console.error(error);
+                        showMessage(error.message);
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalBtnText;
+                    }
+                });
+            } else {
+                console.error("registerForm not found!");
+            }
+
+            // 6. 验证码表单提交
+            if (verificationForm) {
+                verificationForm.addEventListener('submit', async function(e) {
+                    e.preventDefault(); // 阻止刷新
+                    const registrationData = JSON.parse(localStorage.getItem('registrationData'));
+                    if (!registrationData || !registrationData.email) {
+                        showMessage('数据包丢失，请返回重新注册。');
+                        return;
+                    }
+                    const code = document.getElementById('verificationCode').value.trim();
+                    const submitButton = this.querySelector('button[type="submit"]');
+                    const originalBtnText = submitButton.innerHTML;
+                    
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 正在写入档案...';
+                    messageDiv.textContent = '';
+                    messageDiv.style.background = 'transparent';
+
+                    try {
+                        const response = await fetch('/api/verify-email', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ email: registrationData.email, code })
+                        });
+                        const result = await response.json();
+                        if (!response.ok) throw new Error(result.error || '验证失败，代码无效。');
+                        
+                        showMessage('档案建立成功！正在接入系统...', 'success');
+                        localStorage.removeItem('registrationData');
+                        clearInterval(countdownTimer);
+                        setTimeout(() => { window.location.href = 'login.html'; }, 1500);
+                    } catch (error) {
+                        showMessage(error.message);
+                        submitButton.disabled = false;
+                        submitButton.innerHTML = originalBtnText;
+                    }
+                });
+            }
+
+            // 7. 页面加载动画
             const card = document.querySelector('.glass-card');
-            card.style.opacity = '0';
-            card.style.transform = 'translateY(20px)';
-            setTimeout(() => {
-                card.style.transition = 'all 0.6s ease';
-                card.style.opacity = '1';
-                card.style.transform = 'translateY(0)';
-            }, 100);
+            if(card) {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            }
 
-            const registrationData = localStorage.getItem('registrationData');
-            if (registrationData) {
+            // 8. 恢复之前的注册状态 (如果刷新了)
+            const savedData = localStorage.getItem('registrationData');
+            if (savedData && registerStep && verificationStep) {
                 registerStep.style.display = 'none';
                 verificationStep.style.display = 'block';
                 startResendCountdown();
