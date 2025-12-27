@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员后台 - Eulark 生电服务器</title>
+    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .dashboard { padding: 100px 20px 40px; min-height: 100vh; }
+        .dashboard-header { text-align: center; margin-bottom: 2rem; }
+        .dashboard-tabs { display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); }
+        .tab-btn { background: none; border: none; color: var(--text-color-secondary); padding: 15px 25px; font-size: 1.1rem; cursor: pointer; position: relative; transition: color 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
+        .tab-btn.active { color: var(--theme-color); font-weight: bold; }
+        .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background-color: var(--theme-color); }
+        .admin-info { text-align: center; margin-bottom: 1.5rem; }
+        .logout-btn { background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        .message-table { width: 100%; border-radius: 10px; overflow: hidden; border-collapse: collapse; background-color: var(--card-bg-color); font-size: 0.9rem; }
+        .message-table th, .message-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        .message-table th { background-color: var(--theme-color-faded); }
+        .action-buttons { white-space: nowrap; }
+        .action-buttons button, .action-btn { background: none; border: 1px solid var(--text-color-secondary); color: var(--text-color); padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right: 5px; transition: all 0.2s ease; font-size: 0.85rem; }
+        .btn-grant { border-color: #2ecc71; color: #2ecc71; }
+        .btn-grant:hover { background: #2ecc71; color: #fff; }
+        .btn-revoke { border-color: #f39c12; color: #f39c12; }
+        .btn-revoke:hover { background: #f39c12; color: #fff; }
+        .btn-delete { border-color: #e74c3c; color: #e74c3c; }
+        .btn-delete:hover { background: #e74c3c; color: #fff; }
+        .permission-true, .status-online { color: #2ecc71; font-weight: bold; }
+        .permission-false, .status-offline { color: var(--text-color-secondary); }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo"><a href="index.html"><i class="fas fa-atom"></i><span> Eulark 生电服务器</span></a></div>
+                <ul class="nav-menu"><li class="nav-item"><a href="index.html" class="nav-link">返回首页</a></li></ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="dashboard">
+        <div class="container">
+            <div class="dashboard-header"><h1 id="dashboard-title"></h1></div>
+
+            <div class="dashboard-tabs">
+                <button class="tab-btn active" onclick="switchTab('tickets', this)"><i class="fas fa-envelope-open-text"></i> 工单管理</button>
+                <button class="tab-btn" onclick="switchTab('users', this)"><i class="fas fa-users-cog"></i> 用户管理</button>
+                <button class="tab-btn" onclick="switchTab('owner', this)"><i class="fas fa-user-clock"></i> 服主状态</button>
+            </div>
+            
+            <div class="admin-info"><button class="logout-btn" onclick="logout()">安全退出</button></div>
+
+            <div id="tickets-view" style="display: none;">
+                <table class="message-table">
+                    <thead><tr><th>提交时间</th><th>玩家名称</th><th>邮箱</th><th>消息内容</th><th>操作</th></tr></thead>
+                    <tbody id="ticketsContainer"></tbody>
+                </table>
+            </div>
+
+            <div id="users-view" style="display: none;">
+                 <table class="message-table">
+                    <thead><tr><th>ID</th><th>玩家名</th><th>邮箱</th><th>注册时间</th><th>建筑表权限</th><th>操作</th></tr></thead>
+                    <tbody id="usersContainer"></tbody>
+                </table>
+            </div>
+            
+            <div id="owner-view" style="display: none;">
+                <div class="login-container" style="max-width: 500px; margin: 2rem auto;">
+                    <h3>当前状态: <span id="owner-current-status">加载中...</span></h3>
+                    <p style="margin: 1rem 0; color: var(--text-color-secondary);">点击下方按钮来更新您的状态。</p>
+                    <div style="display: flex; gap: 1rem;">
+                        <button id="btn-sleep" class="minecraft-btn" style="flex: 1;" onclick="setSleep()">我睡了</button>
+                        <button id="btn-wake" class="minecraft-btn" style="flex: 1; background: var(--card-bg-color);" onclick="setWake()">我醒了</button>
+                    </div>
+                    <div id="owner-message" class="message" style="margin-top: 1rem;"></div>
+                </div>
+            </div>
+
+            <div id="loadingIndicator" style="text-align: center; padding: 20px; font-size: 1.2rem; display: none;">
+                <p><i class="fas fa-spinner fa-spin"></i> 正在加载...</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const adminToken = localStorage.getItem('adminAuthToken');
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!adminToken) {
+                alert('您没有权限访问此页面，请先登录！');
+                window.location.href = 'admin-login.html';
+                return;
+            }
+            switchTab('tickets', document.querySelector('.tab-btn'));
+        });
+
+        function switchTab(tabName, element) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            element.classList.add('active');
+            document.getElementById('tickets-view').style.display = 'none';
+            document.getElementById('users-view').style.display = 'none';
+            document.getElementById('owner-view').style.display = 'none';
+            document.getElementById(`${tabName}-view`).style.display = 'block';
+
+            if (tabName === 'tickets') {
+                document.getElementById('dashboard-title').innerHTML = '<i class="fas fa-envelope-open-text"></i> 工单管理';
+                fetchTickets();
+            } else if (tabName === 'users') {
+                document.getElementById('dashboard-title').innerHTML = '<i class="fas fa-users-cog"></i> 用户管理';
+                fetchPlayers();
+            } else if (tabName === 'owner') {
+                document.getElementById('dashboard-title').innerHTML = '<i class="fas fa-user-clock"></i> 服主状态管理';
+                fetchOwnerStatus();
+            }
+        }
+
+        async function fetchTickets() {
+            const container = document.getElementById('ticketsContainer');
+            const loading = document.getElementById('loadingIndicator');
+            loading.style.display = 'block';
+            container.innerHTML = '';
+            try {
+                const response = await fetch('/api/admin/messages', { headers: { 'Authorization': `Bearer ${adminToken}` } });
+                if (response.status === 401 || response.status === 403) { logout(); return; }
+                const tickets = await response.json();
+                if (tickets.length === 0) {
+                    container.innerHTML = '<tr><td colspan="5" style="text-align:center;">没有待处理的工单。</td></tr>';
+                } else {
+                    container.innerHTML = tickets.map(msg => `
+                        <tr id="ticket-${msg.id}">
+                            <td>${new Date(msg.created_at).toLocaleString('zh-CN')}</td>
+                            <td>${escapeHTML(msg.player_name)}</td>
+                            <td>${escapeHTML(msg.email)}</td>
+                            <td>${escapeHTML(msg.message)}</td>
+                            <td class="action-buttons"><button class="action-btn btn-delete" onclick="deleteTicket(${msg.id})">删除</button></td>
+                        </tr>`).join('');
+                }
+            } catch (error) {
+                container.innerHTML = `<tr><td colspan="5" style="color:red;">加载失败: ${error.message}</td></tr>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        async function deleteTicket(id) {
+            if (!confirm('确定要永久删除这条工单吗？')) return;
+            try {
+                const response = await fetch(`/api/admin/messages/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${adminToken}` } });
+                if (!response.ok) throw new Error('删除失败');
+                document.getElementById(`ticket-${id}`).remove();
+                alert('删除成功！');
+            } catch (error) {
+                alert(`错误: ${error.message}`);
+            }
+        }
+
+        async function fetchPlayers() {
+            const container = document.getElementById('usersContainer');
+            const loading = document.getElementById('loadingIndicator');
+            loading.style.display = 'block';
+            container.innerHTML = '';
+            try {
+                const response = await fetch('/api/admin/players', { headers: { 'Authorization': `Bearer ${adminToken}` } });
+                if (!response.ok) throw new Error('获取玩家列表失败');
+                const players = await response.json();
+                
+                if (players.length === 0) {
+                    container.innerHTML = '<tr><td colspan="6" style="text-align:center;">暂无注册用户。</td></tr>';
+                } else {
+                    container.innerHTML = players.map(p => `
+                        <tr id="player-row-${p.id}">
+                            <td>${p.id}</td>
+                            <td>${escapeHTML(p.player_name)}</td>
+                            <td>${escapeHTML(p.email)}</td>
+                            <td>${new Date(p.created_at).toLocaleDateString('zh-CN')}</td>
+                            <td class="${p.has_permission ? 'permission-true' : 'permission-false'}">${p.has_permission ? '是' : '否'}</td>
+                            <td class="action-buttons">
+                                ${p.has_permission 
+                                    ? `<button class="action-btn btn-revoke" onclick="revokePermission(${p.id})">取消授权</button>` 
+                                    : `<button class="action-btn btn-grant" onclick="grantPermission(${p.id})">授予权限</button>`
+                                }
+                                <button class="action-btn btn-delete" onclick="deletePlayer(${p.id}, '${escapeHTML(p.player_name)}')">删除用户</button>
+                            </td>
+                        </tr>`).join('');
+                }
+            } catch (error) {
+                container.innerHTML = `<tr><td colspan="6" style="color:red;">加载失败: ${error.message}</td></tr>`;
+            } finally {
+                loading.style.display = 'none';
+            }
+        }
+
+        async function grantPermission(playerId) {
+            if (!confirm(`确定要为 ID 为 ${playerId} 的用户授予建筑表权限吗？`)) return;
+            try {
+                const response = await fetch('/api/admin/permissions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
+                    body: JSON.stringify({ player_id: playerId })
+                });
+                if (!response.ok) throw new Error((await response.json()).error || '授权失败');
+                alert('授权成功！');
+                fetchPlayers();
+            } catch (error) {
+                alert(`错误: ${error.message}`);
+            }
+        }
+        
+        async function revokePermission(playerId) {
+            if (!confirm(`确定要取消 ID 为 ${playerId} 的用户的建筑表权限吗？`)) return;
+            try {
+                const response = await fetch(`/api/admin/permissions/${playerId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                if (!response.ok) throw new Error((await response.json()).error || '取消授权失败');
+                alert('取消授权成功！');
+                fetchPlayers();
+            } catch (error) {
+                alert(`错误: ${error.message}`);
+            }
+        }
+        
+        async function deletePlayer(playerId, playerName) {
+            if (!confirm(`警告：您确定要永久删除用户 "${playerName}" (ID: ${playerId}) 吗？此操作不可恢复！`)) return;
+            try {
+                const response = await fetch(`/api/admin/players/${playerId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                if (!response.ok) throw new Error((await response.json()).error || '删除用户失败');
+                alert('删除用户成功！');
+                fetchPlayers();
+            } catch (error) {
+                alert(`错误: ${error.message}`);
+            }
+        }
+
+        async function fetchOwnerStatus() {
+            const statusSpan = document.getElementById('owner-current-status');
+            const messageDiv = document.getElementById('owner-message');
+            const sleepBtn = document.getElementById('btn-sleep');
+            const wakeBtn = document.getElementById('btn-wake');
+            statusSpan.textContent = '加载中...';
+            messageDiv.textContent = '';
+            try {
+                const response = await fetch('/api/owner-status');
+                if (!response.ok) throw new Error('获取状态失败');
+                const status = await response.json();
+                if (status.is_sleeping) {
+                    statusSpan.textContent = '睡眠中';
+                    statusSpan.className = 'status-offline';
+                    sleepBtn.disabled = true;
+                    wakeBtn.disabled = false;
+                } else {
+                    statusSpan.textContent = '苏醒';
+                    statusSpan.className = 'status-online';
+                    sleepBtn.disabled = false;
+                    wakeBtn.disabled = true;
+                }
+            } catch (error) {
+                statusSpan.textContent = '获取失败';
+                messageDiv.textContent = error.message;
+            }
+        }
+
+        async function setSleep() {
+            const messageDiv = document.getElementById('owner-message');
+            messageDiv.textContent = '正在更新...';
+            try {
+                const response = await fetch('/api/admin/sleep', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                if (!response.ok) throw new Error('操作失败');
+                messageDiv.textContent = '状态已更新为“睡眠中”。';
+                fetchOwnerStatus();
+            } catch (error) {
+                messageDiv.textContent = `错误: ${error.message}`;
+            }
+        }
+        
+        async function setWake() {
+            const messageDiv = document.getElementById('owner-message');
+            messageDiv.textContent = '正在更新...';
+            try {
+                const response = await fetch('/api/admin/wake', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
+                if (!response.ok) throw new Error('操作失败');
+                messageDiv.textContent = '状态已更新为“苏醒”。';
+                fetchOwnerStatus();
+            } catch (error) {
+                messageDiv.textContent = `错误: ${error.message}`;
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('adminAuthToken');
+            alert('已安全退出');
+            window.location.href = 'index.html';
+        }
+
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return str.toString().replace(/[&<>"']/g, match => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[match]));
+        }
+    </script>
+</body>
+</html>

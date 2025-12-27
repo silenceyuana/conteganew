@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>玩家登录 - 筑界物语服务器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo"><a href="index.html"><i class="fas fa-cube"></i><span> 筑界物语服务器</span></a></div>
+                <ul class="nav-menu"><li class="nav-item"><a href="index.html" class="nav-link">返回首页</a></li></ul>
+            </div>
+        </nav>
+    </header>
+
+    <section class="admin-login" style="padding-top: 120px; min-height: 100vh;">
+        <div class="container">
+            <div class="login-container" style="max-width: 450px;">
+                <h2><i class="fas fa-sign-in-alt"></i> 玩家登录</h2>
+                <form id="loginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="identifier"><i class="fas fa-user"></i> 玩家名或邮箱</label>
+                        <input type="text" id="identifier" required placeholder="输入您的玩家名或邮箱">
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-key"></i> 密码</label>
+                        <input type="password" id="password" required placeholder="输入您的密码">
+                    </div>
+                    <button type="submit" class="minecraft-btn login-btn">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </button>
+<!--<p style="text-align: right; margin-top: 10px; font-size: 0.9rem;">
+     <a href="forgot-password.html" style="color: #1755dd;">忘记密码？</a>
+ </p>-->
+                    <div id="formMessage" class="message" style="margin-top: 15px; text-align: center;"></div>
+                    <p style="text-align: center; margin-top: 20px;">
+                        还没有账号？ <a href="register.html" style="color: #4CAF50;">免费注册</a>
+                    </p>
+                </form>
+            </div>
+        </div>
+    </section>
+
+   
+   <script>
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const identifier = document.getElementById('identifier').value.trim();
+        const password = document.getElementById('password').value;
+        const messageDiv = document.getElementById('formMessage');
+        const submitButton = this.querySelector('button[type="submit"]');
+
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在登录...';
+        messageDiv.textContent = '';
+        
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identifier, password })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.error || '登录失败');
+            }
+            
+      
+            localStorage.setItem('playerAuthToken', result.token);
+         
+            localStorage.setItem('playerInfo', JSON.stringify(result.user));
+
+            messageDiv.textContent = '登录成功！欢迎回来，' + result.user.username;
+            messageDiv.style.color = '#2ecc71';
+            
+            setTimeout(() => {
+                window.location.href = 'index.html'; 
+            }, 1500);
+
+        } catch (error) {
+            messageDiv.textContent = error.message;
+            messageDiv.style.color = '#e74c3c';
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> 登录';
+        }
+    });
+    localStorage.setItem('playerAuthToken', result.token);
+    localStorage.setItem('playerInfo', JSON.stringify(result.user));
+</script>
+
+</body>
+</html>

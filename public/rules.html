@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服务器规则 - 筑界物语服务器</title>
+    <link rel="icon" type="image/x-icon" href="/icon.ico">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .rules-page { padding: 120px 0 60px; min-height: 100vh; }
+        .rules-header { text-align: center; margin-bottom: 3rem; }
+        .rules-header h1 { font-size: 3rem; color: #4CAF50; margin-bottom: 1rem; }
+        .rules-header p { font-size: 1.2rem; opacity: 0.9; }
+        .rules-category { background: rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 2rem; margin-bottom: 2rem; border: 1px solid rgba(76, 175, 80, 0.3); }
+        .rules-category h2 { color: #4CAF50; margin-bottom: 1.5rem; font-size: 2rem; border-bottom: 2px solid #4CAF50; padding-bottom: 0.5rem; }
+        .rule-item { margin-bottom: 1.5rem; padding-left: 1rem; border-left: 3px solid #4CAF50; }
+        .rule-item h3 { color: #4CAF50; margin-bottom: 0.5rem; font-size: 1.3rem; }
+        .rule-item p { margin-bottom: 0.5rem; line-height: 1.6; }
+        .consequence { color: #ff6b6b; font-weight: bold; font-size: 0.9rem; }
+        .back-to-home { text-align: center; margin-top: 3rem; }
+    </style>
+</head>
+<body>
+ 
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="index.html">
+                        <i class="fas fa-cube"></i>
+                        <span>eulark生电服务器</span>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="index.html#home" class="nav-link">首页</a></li>
+                    <li class="nav-item"><a href="index.html#about" class="nav-link">关于服务器</a></li>
+                    <li class="nav-item"><a href="rules.html" class="nav-link">服务器规则</a></li>
+                    <li class="nav-item"><a href="index.html#commands" class="nav-link">指令大全</a></li>
+                    <li class="nav-item"><a href="sponsors.html" class="nav-link">赞助名单</a></li>
+                    <li class="nav-item"><a href="banned-wall.html" class="nav-link">封禁墙</a></li>
+                    <li class="nav-item"><a href="index.html#contact" class="nav-link">联系我们</a></li>
+                    <li id="auth-container" class="nav-item">
+                        <a href="login.html" class="nav-link"><b>登录</b></a>
+                    </li>
+                </ul>
+                <div class="menu-toggle">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <main class="rules-page">
+        <div class="container">
+            <div class="rules-header">
+                <h1><i class="fas fa-book"></i> 服务器规则</h1>
+                <p>请仔细阅读并遵守以下规则，共同维护良好的游戏环境</p>
+            </div>
+
+            <div class="rules-category">
+                <h2><i class="fas fa-users"></i> 基本行为准则</h2>
+                <div class="rule-item"><h3>1. 尊重他人</h3><p>禁止任何形式的辱骂、骚扰、歧视或人身攻击行为。</p><p class="consequence">违规处罚：警告 → 禁言 → 封禁</p></div>
+                <div class="rule-item"><h3>2. 文明交流</h3><p>保持聊天频道文明，禁止刷屏、广告、发布不当内容。</p><p class="consequence">违规处罚：禁言 → 封禁</p></div>
+                <div class="rule-item"><h3>3. 禁止冒充</h3><p>禁止冒充管理员或其他玩家。</p><p class="consequence">违规处罚：直接封禁</p></div>
+            </div>
+
+     
+            <div class="rules-category">
+                <h2><i class="fas fa-gamepad"></i> 游戏行为规则</h2>
+                <div class="rule-item"><h3>4. 禁止破坏</h3><p>未经允许不得破坏他人建筑、偷窃物品。</p><p class="consequence">违规处罚：直接封禁</p></div>
+                <div class="rule-item"><h3>5. 领地保护</h3><p>请合理使用领地系统，不得恶意圈地阻碍他人。</p><p class="consequence">违规处罚：领地重置 → 封禁</p></div>
+                <div class="rule-item"><h3>6. PvP规则</h3><p>仅在指定PvP区域进行战斗，禁止恶意击杀。</p><p class="consequence">违规处罚：警告 → 封禁</p></div>
+            </div>
+
+         
+            <div class="rules-category">
+                <h2><i class="fas fa-cog"></i> 服务器管理</h2>
+                <div class="rule-item"><h3>7. 遵守管理员指令</h3><p>请配合管理员工作，遵守管理员的合理指令。</p><p class="consequence">违规处罚：警告 → 封禁</p></div>
+                <div class="rule-item"><h3>8. 举报机制</h3><p>发现违规行为请及时向管理员举报，不得私自处理。</p></div>
+                <div class="rule-item"><h3>9. 申诉流程</h3><p>对处罚有异议可通过正规渠道申诉，不得在游戏中吵闹。</p></div>
+            </div>
+
+            <div class="back-to-home">
+                <a href="index.html" class="cta-button secondary"><i class="fas fa-arrow-left"></i> 返回首页</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 eulark生电服务器. 保留所有权利.</p>
+            <div class="social-links">
+                <a href="https://qm.qq.com/q/tFM6hyl7Ds" title="QQ"><i class="fab fa-qq"></i></a>
+                <a href="https://space.bilibili.com/3546744358963684" title="Bilibili"><i class="fab fa-bilibili"></i></a>
+            </div>
+        </div>
+    </footer>
+
+  
+    <script src="script.js"></script>
+</body>
+</html>

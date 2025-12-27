@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>服主睡眠时间表 - Eulark 生电服务器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .page-container { padding: 120px 20px 60px; min-height: 100vh; }
+        .page-header { text-align: center; margin-bottom: 2rem; }
+        .page-header h1 { display: inline-flex; align-items: center; gap: 1rem; }
+        .status-box { text-align: center; padding: 2rem; background: var(--card-bg-color); border-radius: 15px; margin: 0 auto 2rem auto; max-width: 800px; }
+        .status-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .status-text { font-size: 1.8rem; font-weight: bold; }
+        .status-time { color: var(--text-color-secondary); font-size: 0.9rem; }
+        .status-sleeping .status-icon, .status-sleeping .status-text { color: var(--theme-color); }
+        .status-awake .status-icon, .status-awake .status-text { color: #2ecc71; }
+        .message-table { width: 100%; max-width: 800px; margin: 0 auto; border-collapse: collapse; background-color: var(--card-bg-color); border-radius: 10px; overflow: hidden; }
+        .message-table th, .message-table td { padding: 15px; text-align: center; border-bottom: 1px solid var(--border-color); }
+        .message-table th { background-color: var(--theme-color-faded); }
+        .back-to-home { text-align: center; margin-top: 2rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo"><a href="index.html"><i class="fas fa-atom"></i><span> Eulark 生电服务器</span></a></div>
+                <ul class="nav-menu"><li class="nav-item"><a href="index.html" class="nav-link">返回首页</a></li></ul>
+            </div>
+        </nav>
+    </header>
+
+    <main class="page-container">
+        <div class="container">
+            <div class="page-header">
+                <h1><i class="fas fa-bed"></i> 服主睡眠时间表</h1>
+            </div>
+
+            <div id="status-container" class="status-box">
+                <p>正在获取服主状态...</p>
+            </div>
+            
+            <h2 style="text-align: center; margin: 2rem 0 1rem 0;">最近睡眠记录</h2>
+            <table class="message-table">
+                <thead>
+                    <tr>
+                        <th>入睡时间</th>
+                        <th>苏醒时间</th>
+                        <th>睡眠时长</th>
+                    </tr>
+                </thead>
+                <tbody id="sessions-container">
+                    <tr><td colspan="3">正在加载记录...</td></tr>
+                </tbody>
+            </table>
+
+            <div class="back-to-home">
+                <a href="index.html" class="cta-button secondary" style="border-radius: 50px;">返回首页</a>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', fetchOwnerStatus);
+
+        async function fetchOwnerStatus() {
+            const statusContainer = document.getElementById('status-container');
+            const historyContainer = document.getElementById('sessions-container');
+            
+            try {
+                const response = await fetch('/api/owner-status');
+                if (!response.ok) throw new Error('获取记录失败');
+                
+                const data = await response.json();
+
+                // 更新当前状态显示
+                if (data.is_sleeping) {
+                    statusContainer.innerHTML = `
+                        <div class="status-sleeping">
+                            <div class="status-icon"><i class="fas fa-moon"></i></div>
+                            <div class="status-text">服主正在睡觉</div>
+                            <p class="status-time">从 ${new Date(data.last_changed_at).toLocaleString('zh-CN')} 开始</p>
+                        </div>
+                    `;
+                } else {
+                    statusContainer.innerHTML = `
+                        <div class="status-awake">
+                            <div class="status-icon"><i class="fas fa-sun"></i></div>
+                            <div class="status-text">服主当前醒着</div>
+                            <p class="status-time">从 ${new Date(data.last_changed_at).toLocaleString('zh-CN')} 开始</p>
+                        </div>
+                    `;
+                }
+
+                // 更新历史记录表格
+                const sleepHistory = data.sleep_history || [];
+                if (sleepHistory.length === 0) {
+                    historyContainer.innerHTML = '<tr><td colspan="3">暂无完整的睡眠记录。</td></tr>';
+                    return;
+                }
+
+                historyContainer.innerHTML = sleepHistory
+                    .map(record => {
+                        // 确保记录有开始时间
+                        if (!record.start) return '';
+
+                        const startTime = new Date(record.start);
+                        const endTime = record.end ? new Date(record.end) : null;
+                        
+                        return `
+                            <tr>
+                                <td>${startTime.toLocaleString('zh-CN')}</td>
+                                <td>${endTime ? endTime.toLocaleString('zh-CN') : '<i>睡眠中...</i>'}</td>
+                                <td>${endTime ? formatDuration(endTime - startTime) : '-'}</td>
+                            </tr>
+                        `;
+                    })
+                    .join('');
+
+            } catch (error) {
+                statusContainer.innerHTML = `<p style="color:red;">加载状态失败: ${error.message}</p>`;
+                historyContainer.innerHTML = `<tr><td colspan="3" style="color:red;">加载记录失败</td></tr>`;
+            }
+        }
+
+        function formatDuration(ms) {
+            if (ms < 0) ms = 0;
+            const hours = Math.floor(ms / 3600000);
+            const minutes = Math.floor((ms % 3600000) / 60000);
+            return `${hours}小时 ${minutes}分钟`;
+        }
+    </script>
+</body>
+</html>

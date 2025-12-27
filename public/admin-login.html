@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员登录 - 筑界物语服务器</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="nav-container">
+                <div class="nav-logo">
+                    <a href="index.html">
+                        <i class="fas fa-cube"></i>
+                        <span>筑界物语服务器</span>
+                    </a>
+                </div>
+                <ul class="nav-menu">
+                    <li class="nav-item">
+                        <a href="index.html" class="nav-link">返回首页</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+
+    <section class="admin-login" style="padding-top: 80px;">
+        <div class="container">
+            <div class="login-container">
+                <h2><i class="fas fa-lock"></i> 管理员登录</h2>
+                <form id="adminLoginForm" class="login-form">
+                    <div class="form-group">
+                        <label for="username"><i class="fas fa-user"></i> 用户名</label>
+                        <input type="text" id="username" name="username" required placeholder="请输入管理员账号">
+                    </div>
+                    <div class="form-group">
+                        <label for="password"><i class="fas fa-key"></i> 密码</label>
+                        <input type="password" id="password" name="password" required placeholder="请输入密码">
+                    </div>
+                    <button type="submit" class="minecraft-btn login-btn">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </button>
+                    <div id="loginMessage" class="message" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); 
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const message = document.getElementById('loginMessage');
+            const submitButton = this.querySelector('button[type="submit"]');
+
+
+            submitButton.disabled = true;
+            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在登录...';
+            message.textContent = '';
+            
+            try {
+
+                const response = await fetch('/api/admin/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+
+                const result = await response.json();
+
+                if (!response.ok) {
+              
+                    throw new Error(result.error || '登录失败，请检查网络连接');
+                }
+
+                
+                message.textContent = '登录成功！正在跳转到后台...';
+                message.style.color = '#2ecc71';
+                
+           
+                localStorage.setItem('adminAuthToken', result.token);
+                
+          
+                setTimeout(() => {
+                    window.location.href = 'admin-dashboard.html';
+                }, 1000);
+
+            } catch (error) {
+          
+                message.textContent = error.message;
+                message.style.color = '#e74c3c';
+                
+                // 恢复按钮状态
+                submitButton.disabled = false;
+                submitButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> 登录';
+            }
+        });
+    </script>
+</body>
+</html>
