@@ -529,3 +529,76 @@ section h2 i {
     .specs-grid { grid-template-columns: repeat(2, 1fr); }
     .ios-grid-list { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* --- 用户登录状态 (User Info Pill) 美化 --- */
+.user-info-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(13, 148, 136, 0.1); /* 极淡的青色背景 */
+    padding: 6px 6px 6px 14px; /* 右侧padding小一点，因为按钮自带间距 */
+    border-radius: 30px;
+    border: 1px solid rgba(13, 148, 136, 0.2);
+    margin-left: 10px;
+    transition: all 0.3s ease;
+}
+
+.user-info-pill:hover {
+    background: rgba(13, 148, 136, 0.15);
+    border-color: rgba(13, 148, 136, 0.3);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+}
+
+/* 用户名样式 */
+.user-name-span {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ios-primary); /* 使用主题青色 */
+    max-width: 120px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+/* 退出按钮样式 */
+.logout-btn-small {
+    background: #ffffff;
+    border: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #ef4444; /* 红色图标 */
+    transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.logout-btn-small:hover {
+    background: #ef4444;
+    color: #ffffff;
+    transform: scale(1.1) rotate(90deg); /* 悬浮时旋转并变色 */
+    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+}
+
+.logout-btn-small i {
+    font-size: 0.85rem;
+}
+
+/* 适配深色模式 */
+@media (prefers-color-scheme: dark) {
+    .user-info-pill {
+        background: rgba(45, 212, 191, 0.1);
+        border-color: rgba(45, 212, 191, 0.2);
+    }
+    .user-name-span {
+        color: #5eead4;
+    }
+    .logout-btn-small {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
