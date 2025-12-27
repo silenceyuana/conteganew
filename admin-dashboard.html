@@ -9,7 +9,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        /* Dashboard 专属样式 */
+        /* --- Dashboard 布局 --- */
         .dashboard-section {
             padding: 100px 20px 40px;
             min-height: 100vh;
@@ -33,7 +33,7 @@
         }
         .header-title p { color: var(--ios-text-secondary); font-size: 0.9rem; }
 
-        /* iOS 分段控制器 (Tabs) */
+        /* --- iOS 分段控制器 (Tabs) --- */
         .segmented-control {
             display: inline-flex;
             background: rgba(0, 0, 0, 0.05);
@@ -64,16 +64,18 @@
         }
         .tab-btn:hover:not(.active) { color: var(--ios-text-primary); }
 
-        /* 内容区域 */
+        /* --- 内容区域 --- */
         .view-section { display: none; animation: fadeIn 0.4s ease; }
         .view-section.active { display: block; }
 
-        /* 表格样式优化 */
+        /* --- 玻璃表格样式 --- */
         .admin-table-container {
             background: var(--glass-bg);
             border-radius: 20px;
             border: 1px solid var(--glass-border);
             overflow-x: auto; /* 移动端横向滚动 */
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(20px);
         }
         
         .admin-table {
@@ -84,57 +86,60 @@
         
         .admin-table th {
             text-align: left;
-            padding: 15px 20px;
+            padding: 18px 20px;
             color: var(--ios-text-secondary);
             font-size: 0.85rem;
+            font-weight: 700;
             text-transform: uppercase;
             border-bottom: 1px solid var(--glass-border);
             background: rgba(13, 148, 136, 0.05);
         }
         
         .admin-table td {
-            padding: 15px 20px;
+            padding: 16px 20px;
             border-bottom: 1px solid rgba(0,0,0,0.03);
             color: var(--ios-text-primary);
             font-size: 0.95rem;
+            vertical-align: middle;
         }
         .admin-table tr:last-child td { border-bottom: none; }
-        .admin-table tr:hover td { background: rgba(255,255,255,0.3); }
+        .admin-table tr:hover td { background: rgba(255,255,255,0.4); }
 
-        /* 操作按钮组 */
-        .action-group { display: flex; gap: 8px; }
+        /* --- 操作按钮组 --- */
+        .action-group { display: flex; gap: 8px; justify-content: flex-end; }
         .btn-icon {
             width: 32px; height: 32px;
-            border-radius: 8px;
+            border-radius: 10px;
             border: none;
             display: flex; align-items: center; justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
         }
         .btn-delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
-        .btn-delete:hover { background: #ef4444; color: white; }
+        .btn-delete:hover { background: #ef4444; color: white; transform: scale(1.05); }
         
-        .btn-edit { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
-        .btn-edit:hover { background: #3b82f6; color: white; }
-
         .btn-grant { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-        .btn-grant:hover { background: #10b981; color: white; }
+        .btn-grant:hover { background: #10b981; color: white; transform: scale(1.05); }
 
-        /* 状态标签 */
+        .btn-reply { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .btn-reply:hover { background: #3b82f6; color: white; transform: scale(1.05); }
+
+        /* --- 状态标签 --- */
         .status-badge {
             padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
+            display: inline-block;
         }
-        .status-badge.yes { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-        .status-badge.no { background: rgba(100, 116, 139, 0.1); color: #64748b; }
+        .status-badge.yes { background: rgba(16, 185, 129, 0.15); color: #059669; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-badge.no { background: rgba(100, 116, 139, 0.1); color: #64748b; border: 1px solid rgba(100, 116, 139, 0.2); }
 
-        /* 模态框 (Add Modal) */
+        /* --- 模态框 (Modal) --- */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(8px);
             z-index: 2000;
             display: flex; align-items: center; justify-content: center;
             opacity: 0; pointer-events: none; transition: opacity 0.3s;
@@ -142,14 +147,46 @@
         .modal-overlay.active { opacity: 1; pointer-events: auto; }
         
         .modal-card {
-            background: var(--nav-bg);
+            background: #f0fdfa; /* 极淡青色背景 */
             border-radius: 24px;
             padding: 30px;
             width: 90%; max-width: 500px;
             box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.8);
             transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
         .modal-overlay.active .modal-card { transform: scale(1); }
+
+        /* --- 修复后的模态框输入框样式 --- */
+        .modal-card .ios-input {
+            width: 100%;
+            padding: 12px 16px;
+            background: #ffffff;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            font-size: 1rem;
+            color: var(--ios-text-primary);
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .modal-card .ios-input:focus {
+            border-color: var(--ios-primary);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
+        }
+
+        textarea.ios-input { resize: vertical; min-height: 100px; line-height: 1.5; }
+
+        .modal-card label {
+            font-weight: 600;
+            margin-left: 4px;
+            margin-bottom: 8px;
+            display: block;
+            color: var(--ios-text-secondary);
+            font-size: 0.9rem;
+        }
 
         .toolbar {
             display: flex; justify-content: flex-end; margin-bottom: 20px;
@@ -159,8 +196,8 @@
         
         @media (max-width: 768px) {
             .dashboard-header { flex-direction: column; align-items: flex-start; }
-            .segmented-control { width: 100%; overflow-x: auto; }
-            .tab-btn { flex: 1; white-space: nowrap; }
+            .segmented-control { width: 100%; overflow-x: auto; white-space: nowrap; }
+            .tab-btn { flex: 1; }
         }
     </style>
 </head>
@@ -178,7 +215,7 @@
             </div>
             <ul class="nav-menu">
                 <li class="nav-item">
-                    <button onclick="logout()" class="ios-btn-secondary" style="padding: 6px 16px; font-size: 0.85rem; border-color: #ef4444; color: #ef4444;">
+                    <button onclick="logout()" class="ios-btn-secondary" style="padding: 8px 20px; font-size: 0.85rem; border-color: #ef4444; color: #ef4444; background: rgba(255,255,255,0.8);">
                         <i class="fas fa-sign-out-alt"></i> 退出
                     </button>
                 </li>
@@ -257,19 +294,19 @@
     <!-- 模态框: 新增规则 -->
     <div id="ruleModal" class="modal-overlay">
         <div class="modal-card">
-            <h3 style="margin-bottom: 20px; color: var(--ios-primary);">新增界域法则</h3>
+            <h3 style="margin-bottom: 20px; color: var(--ios-primary); font-size: 1.4rem;">新增界域法则</h3>
             <form id="addRuleForm">
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-size:0.9rem; color:var(--ios-text-secondary);">规则内容</label>
+                <div style="margin-bottom: 20px;">
+                    <label>规则内容</label>
                     <textarea id="ruleContent" class="ios-input" rows="3" required placeholder="例如：禁止在主城区域进行PVP..."></textarea>
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="display:block; margin-bottom:5px; font-size:0.9rem; color:var(--ios-text-secondary);">惩罚措施</label>
+                <div style="margin-bottom: 25px;">
+                    <label>惩罚措施</label>
                     <input type="text" id="rulePunishment" class="ios-input" placeholder="例如：封禁 3 天">
                 </div>
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" class="ios-btn-secondary" onclick="closeModal('ruleModal')">取消</button>
-                    <button type="submit" class="ios-btn-primary">保存</button>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="ios-btn-secondary" onclick="closeModal('ruleModal')" style="border:none; background: rgba(0,0,0,0.05);">取消</button>
+                    <button type="submit" class="ios-btn-primary" style="padding: 10px 24px;">保存</button>
                 </div>
             </form>
         </div>
@@ -278,19 +315,19 @@
     <!-- 模态框: 发布公告 -->
     <div id="announceModal" class="modal-overlay">
         <div class="modal-card">
-            <h3 style="margin-bottom: 20px; color: var(--ios-primary);">发布全服公告</h3>
+            <h3 style="margin-bottom: 20px; color: var(--ios-primary); font-size: 1.4rem;">发布全服公告</h3>
             <form id="addAnnounceForm">
-                <div style="margin-bottom: 15px;">
-                    <label style="display:block; margin-bottom:5px; font-size:0.9rem; color:var(--ios-text-secondary);">公告标题</label>
+                <div style="margin-bottom: 20px;">
+                    <label>公告标题</label>
                     <input type="text" id="announceTitle" class="ios-input" required placeholder="例如：服务器维护通知">
                 </div>
-                <div style="margin-bottom: 20px;">
-                    <label style="display:block; margin-bottom:5px; font-size:0.9rem; color:var(--ios-text-secondary);">公告内容</label>
+                <div style="margin-bottom: 25px;">
+                    <label>公告内容</label>
                     <textarea id="announceContent" class="ios-input" rows="5" required placeholder="输入公告详情..."></textarea>
                 </div>
-                <div style="display: flex; gap: 10px; justify-content: flex-end;">
-                    <button type="button" class="ios-btn-secondary" onclick="closeModal('announceModal')">取消</button>
-                    <button type="submit" class="ios-btn-primary">发布</button>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button type="button" class="ios-btn-secondary" onclick="closeModal('announceModal')" style="border:none; background: rgba(0,0,0,0.05);">取消</button>
+                    <button type="submit" class="ios-btn-primary" style="padding: 10px 24px;">发布</button>
                 </div>
             </form>
         </div>
@@ -303,7 +340,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (!adminToken) {
                 alert('未检测到管理员密钥，请登录。');
-                window.location.href = 'admin-login.html'; // 假设您有这个页面，或者复用 login.html
+                window.location.href = 'admin-login.html';
                 return;
             }
             // 默认加载第一个标签页的数据
@@ -333,12 +370,12 @@
                 'tickets': 'ticketsTableBody'
             };
             const tbody = document.getElementById(tableMap[type]);
-            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> 数据同步中...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--ios-text-secondary);"><i class="fas fa-circle-notch fa-spin"></i> 数据同步中...</td></tr>';
 
             try {
                 // 根据类型决定 API 路径
                 let url = '';
-                if (type === 'rules') url = '/api/rules'; // 公开接口即可，或者是 /api/admin/rules
+                if (type === 'rules') url = '/api/rules'; 
                 else if (type === 'announcements') url = '/api/announcements'; 
                 else if (type === 'users') url = '/api/admin/players';
                 else if (type === 'tickets') url = '/api/admin/messages';
@@ -362,19 +399,22 @@
         // 渲染表格逻辑
         function renderTable(type, data, tbody) {
             if (!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--ios-text-secondary);">暂无数据记录。</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--ios-text-secondary); padding: 30px;">暂无数据记录。</td></tr>';
                 return;
             }
 
             tbody.innerHTML = data.map(item => {
                 if (type === 'rules') {
+                    // 兼容旧数据结构，如果 content 里没有惩罚，则显示惩罚字段
+                    const content = escapeHTML(item.content);
+                    const punishment = escapeHTML(item.punishment || '无');
                     return `
                         <tr>
                             <td>#${item.id}</td>
-                            <td>${escapeHTML(item.content)}</td>
-                            <td><span class="status-badge no">${escapeHTML(item.punishment || '无')}</span></td>
+                            <td>${content}</td>
+                            <td><span class="status-badge no">${punishment}</span></td>
                             <td>
-                                <div class="action-group" style="justify-content: flex-end;">
+                                <div class="action-group">
                                     <button class="btn-icon btn-delete" onclick="deleteItem('rules', ${item.id})" title="删除"><i class="fas fa-trash"></i></button>
                                 </div>
                             </td>
@@ -386,7 +426,7 @@
                             <td style="font-weight:600;">${escapeHTML(item.title)}</td>
                             <td>${escapeHTML(item.content).substring(0, 30)}...</td>
                             <td>
-                                <div class="action-group" style="justify-content: flex-end;">
+                                <div class="action-group">
                                     <button class="btn-icon btn-delete" onclick="deleteItem('announcements', ${item.id})"><i class="fas fa-trash"></i></button>
                                 </div>
                             </td>
@@ -403,7 +443,7 @@
                                 </span>
                             </td>
                             <td>
-                                <div class="action-group" style="justify-content: flex-end;">
+                                <div class="action-group">
                                     ${item.has_permission 
                                         ? `<button class="btn-icon btn-delete" onclick="togglePermission(${item.id}, 'revoke')" title="撤销权限"><i class="fas fa-ban"></i></button>` 
                                         : `<button class="btn-icon btn-grant" onclick="togglePermission(${item.id}, 'grant')" title="授予权限"><i class="fas fa-check"></i></button>`
@@ -419,9 +459,9 @@
                             <td>${escapeHTML(item.player_name)}</td>
                             <td>${escapeHTML(item.message)}</td>
                             <td>
-                                <div class="action-group" style="justify-content: flex-end;">
-                                    <button class="btn-icon btn-grant" onclick="window.location.href='mailto:${item.email}'" title="回复邮件"><i class="fas fa-reply"></i></button>
-                                    <button class="btn-icon btn-delete" onclick="deleteItem('messages', ${item.id})" title="删除工单"><i class="fas fa-check"></i></button>
+                                <div class="action-group">
+                                    <button class="btn-icon btn-reply" onclick="window.location.href='mailto:${item.email}'" title="回复邮件"><i class="fas fa-reply"></i></button>
+                                    <button class="btn-icon btn-grant" onclick="deleteItem('messages', ${item.id})" title="标记为已处理"><i class="fas fa-check"></i></button>
                                 </div>
                             </td>
                         </tr>`;
@@ -476,11 +516,13 @@
         // --- 表单提交: 新增规则 ---
         document.getElementById('addRuleForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            
             const content = document.getElementById('ruleContent').value;
             const punishment = document.getElementById('rulePunishment').value;
 
             try {
-                // 注意：这里假设后端有 POST /api/admin/rules 接口
                 const response = await fetch('/api/admin/rules', {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json' },
@@ -491,16 +533,19 @@
                 e.target.reset();
                 loadData('rules');
             } catch (e) { alert(e.message); }
+            finally { btn.innerHTML = '保存'; }
         });
 
         // --- 表单提交: 发布公告 ---
         document.getElementById('addAnnounceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
             const title = document.getElementById('announceTitle').value;
             const content = document.getElementById('announceContent').value;
 
             try {
-                // 注意：这里假设后端有 POST /api/admin/announcements 接口
                 const response = await fetch('/api/admin/announcements', {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json' },
@@ -511,6 +556,7 @@
                 e.target.reset();
                 loadData('announcements');
             } catch (e) { alert(e.message); }
+            finally { btn.innerHTML = '发布'; }
         });
 
         function logout() {
