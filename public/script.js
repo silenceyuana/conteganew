@@ -232,6 +232,21 @@ async function checkAndShowSpecialLinks() {
         console.error('检查特殊权限时发生网络错误:', error);
     }
 }
+/* --- 导航栏滚动监听脚本 --- */
+document.addEventListener('DOMContentLoaded', function() {
+    const header = document.querySelector('header');
+    
+    // 监听滚动事件
+    window.addEventListener('scroll', function() {
+        if (window.scrollY > 50) {
+            // 当滚动超过 50px 时，添加 scrolled 类（变宽、贴顶）
+            header.classList.add('scrolled');
+        } else {
+            // 回到顶部时，恢复悬浮胶囊样式
+            header.classList.remove('scrolled');
+        }
+    });
+});
 
 function escapeHTML(str) {
     if (typeof str !== 'string' && str !== null && str !== undefined) { str = str.toString(); }

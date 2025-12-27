@@ -3,51 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>玩家登录 - 筑界物语服务器</title>
+    <title>身份验证 - Contega 筑界物语</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="images/1.png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- 页面专属微调样式 -->
+    <style>
+        .login-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 40px;
+        }
+        
+        .login-wrapper {
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 30px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-header p {
+            color: var(--ios-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* 输入框样式重写 */
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--ios-text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+        
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ios-primary);
+            opacity: 0.7;
+        }
+
+        .ios-input {
+            width: 100%;
+            padding: 14px 14px 14px 45px; /* 左侧留出图标位置 */
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            font-size: 1rem;
+            color: var(--ios-text-primary);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .ios-input:focus {
+            border-color: var(--ios-primary);
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--ios-text-secondary);
+        }
+
+        .login-footer a {
+            color: var(--ios-primary);
+            font-weight: 600;
+        }
+        
+        .message {
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 10px;
+            border-radius: 10px;
+        }
+    </style>
 </head>
 <body>
+
+    <!-- 1. 动态流体背景 -->
+    <div class="ios-background-mesh"></div>
+
     <header>
+        <!-- 2. 导航栏 (与主页结构一致) -->
         <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo"><a href="index.html"><i class="fas fa-cube"></i><span> 筑界物语服务器</span></a></div>
-                <ul class="nav-menu"><li class="nav-item"><a href="index.html" class="nav-link">返回首页</a></li></ul>
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>CONTEGA</span>
+                </a>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">返回主界</a></li>
+                <li class="nav-item"><a href="register.html" class="nav-link">注册通行证</a></li>
+            </ul>
+
+            <div class="menu-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
             </div>
         </nav>
     </header>
 
-    <section class="admin-login" style="padding-top: 120px; min-height: 100vh;">
-        <div class="container">
-            <div class="login-container" style="max-width: 450px;">
-                <h2><i class="fas fa-sign-in-alt"></i> 玩家登录</h2>
-                <form id="loginForm" class="login-form">
-                    <div class="form-group">
-                        <label for="identifier"><i class="fas fa-user"></i> 玩家名或邮箱</label>
-                        <input type="text" id="identifier" required placeholder="输入您的玩家名或邮箱">
-                    </div>
-                    <div class="form-group">
-                        <label for="password"><i class="fas fa-key"></i> 密码</label>
-                        <input type="password" id="password" required placeholder="输入您的密码">
-                    </div>
-                    <button type="submit" class="minecraft-btn login-btn">
-                        <i class="fas fa-sign-in-alt"></i> 登录
-                    </button>
-<!--<p style="text-align: right; margin-top: 10px; font-size: 0.9rem;">
-     <a href="forgot-password.html" style="color: #1755dd;">忘记密码？</a>
- </p>-->
-                    <div id="formMessage" class="message" style="margin-top: 15px; text-align: center;"></div>
-                    <p style="text-align: center; margin-top: 20px;">
-                        还没有账号？ <a href="register.html" style="color: #4CAF50;">免费注册</a>
-                    </p>
-                </form>
+    <section class="login-section">
+        <!-- 3. 玻璃拟态卡片容器 -->
+        <div class="glass-card login-wrapper hover-lift">
+            <div class="login-header">
+                <h2><i class="fas fa-fingerprint"></i> 身份验证</h2>
+                <p>欢迎回到筑界物语，请连接您的神经链路。</p>
             </div>
+
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="identifier">账户 ID / 电子邮箱</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-user-astronaut"></i>
+                        <input type="text" id="identifier" class="ios-input" required placeholder="name@example.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">访问密钥 (密码)</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-key"></i>
+                        <input type="password" id="password" class="ios-input" required placeholder="••••••••">
+                    </div>
+                </div>
+
+                <!-- 4. iOS 风格按钮 -->
+                <button type="submit" class="ios-btn-primary full-width" style="width: 100%; justify-content: center; margin-top: 10px;">
+                    <i class="fas fa-sign-in-alt"></i> 接入系统
+                </button>
+
+                <div id="formMessage" class="message" style="margin-top: 15px; text-align: center;"></div>
+
+                <div class="login-footer">
+                    <p>尚未建立档案？ <a href="register.html">创建新 ID</a></p>
+                    <p style="margin-top: 5px;"><a href="#" style="font-size: 0.85rem; opacity: 0.7;">遗失密钥?</a></p>
+                </div>
+            </form>
         </div>
     </section>
 
+    <!-- 底部版权 (可选，保持统一) -->
+    <footer class="footer">
+        <div class="container">
+             <p>&copy; 2025 Contega (筑界物语). Secure Login System.</p>
+        </div>
+    </footer>
+
+    <!-- 复用主脚本 -->
+    <script src="script.js"></script>
    
-   <script>
+    <!-- 登录逻辑脚本 -->
+    <script>
     document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
@@ -55,10 +191,13 @@
         const password = document.getElementById('password').value;
         const messageDiv = document.getElementById('formMessage');
         const submitButton = this.querySelector('button[type="submit"]');
+        const originalBtnText = submitButton.innerHTML;
 
+        // 切换按钮状态
         submitButton.disabled = true;
-        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在登录...';
+        submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 正在验证...';
         messageDiv.textContent = '';
+        messageDiv.style.background = 'transparent';
         
         try {
             const response = await fetch('/api/login', {
@@ -70,31 +209,37 @@
             const result = await response.json();
 
             if (!response.ok) {
-                throw new Error(result.error || '登录失败');
+                throw new Error(result.error || '验证失败，请检查凭证');
             }
             
-      
+            // 存储 Token
             localStorage.setItem('playerAuthToken', result.token);
-         
             localStorage.setItem('playerInfo', JSON.stringify(result.user));
 
-            messageDiv.textContent = '登录成功！欢迎回来，' + result.user.username;
-            messageDiv.style.color = '#2ecc71';
+            messageDiv.innerHTML = '<i class="fas fa-check-circle"></i> 验证通过，正在跳转...';
+            messageDiv.style.color = '#0d9488'; // Teal Color
+            messageDiv.style.background = 'rgba(13, 148, 136, 0.1)';
             
             setTimeout(() => {
                 window.location.href = 'index.html'; 
-            }, 1500);
+            }, 1000);
 
         } catch (error) {
-            messageDiv.textContent = error.message;
-            messageDiv.style.color = '#e74c3c';
+            messageDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${error.message}`;
+            messageDiv.style.color = '#ef4444'; // Red color
+            messageDiv.style.background = 'rgba(239, 68, 68, 0.1)';
+            
             submitButton.disabled = false;
-            submitButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> 登录';
+            submitButton.innerHTML = originalBtnText;
+            
+            // 错误震动反馈动画
+            const card = document.querySelector('.glass-card');
+            card.style.transform = 'translateX(5px)';
+            setTimeout(() => card.style.transform = 'translateX(-5px)', 100);
+            setTimeout(() => card.style.transform = 'none', 200);
         }
     });
-    localStorage.setItem('playerAuthToken', result.token);
-    localStorage.setItem('playerInfo', JSON.stringify(result.user));
-</script>
+    </script>
 
 </body>
 </html>

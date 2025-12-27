@@ -3,100 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>玩家注册 - Eulark 生电服务器</title>
+    <title>创建档案 - Contega 筑界物语</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="images/1.png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- 注册页面专属样式 -->
     <style>
+        .register-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 40px;
+        }
+        
+        .register-wrapper {
+            width: 100%;
+            max-width: 480px; /* 比登录框稍微宽一点 */
+            padding: 40px 30px;
+        }
+
+        .register-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .register-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .register-header p {
+            color: var(--ios-text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* 步骤指示器 */
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .step-dot.active {
+            background: var(--ios-primary);
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(13, 148, 136, 0.3);
+        }
+
+        /* 输入框样式复用 */
+        .form-group { margin-bottom: 15px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--ios-text-secondary);
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-left: 5px;
+        }
+
+        .input-wrapper { position: relative; }
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--ios-primary);
+            opacity: 0.7;
+            font-size: 0.9rem;
+        }
+
+        .ios-input {
+            width: 100%;
+            padding: 12px 12px 12px 40px;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            font-size: 0.95rem;
+            color: var(--ios-text-primary);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .ios-input:focus {
+            border-color: var(--ios-primary);
+            background: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.15);
+        }
+
+        /* 验证码输入框特殊样式 */
+        #verificationCode {
+            letter-spacing: 5px;
+            font-family: monospace;
+            font-weight: bold;
+            text-align: center;
+            padding-left: 12px; /* 居中不需要左侧padding留给图标 */
+        }
+
         .resend-container {
             text-align: center;
             margin-top: 1.5rem;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
+            color: var(--ios-text-secondary);
         }
         .action-link {
             background: none;
             border: none;
-            color: var(--link-color);
+            color: var(--ios-primary);
             cursor: pointer;
-            text-decoration: underline;
-            font-family: inherit;
+            font-weight: 600;
             padding: 0;
+            transition: opacity 0.2s;
         }
+        .action-link:hover { opacity: 0.8; }
         .action-link:disabled {
-            color: var(--text-color-secondary);
+            color: var(--ios-text-secondary);
             cursor: not-allowed;
-            text-decoration: none;
+            opacity: 0.6;
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.85rem;
+            color: var(--ios-text-secondary);
+            border-top: 1px solid var(--glass-border);
+            padding-top: 15px;
+        }
+        .login-footer a { color: var(--ios-primary); font-weight: 600; }
+        
+        .message {
+            font-weight: 600;
+            font-size: 0.85rem;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 15px;
+            min-height: 20px;
         }
     </style>
 </head>
 <body>
+
+    <!-- 1. 动态流体背景 -->
+    <div class="ios-background-mesh"></div>
+
     <header>
+        <!-- 2. 导航栏 -->
         <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo"><a href="index.html"><i class="fas fa-atom"></i><span> Eulark 生电服务器</span></a></div>
-                <ul class="nav-menu"><li class="nav-item"><a href="index.html" class="nav-link">返回首页</a></li></ul>
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>CONTEGA</span>
+                </a>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">返回主界</a></li>
+                <li class="nav-item"><a href="login.html" class="nav-link">已有账号</a></li>
+            </ul>
+
+            <div class="menu-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
             </div>
         </nav>
     </header>
 
-    <section class="admin-login" style="padding-top: 120px; min-height: 100vh;">
-        <div class="container">
-            <div class="login-container" style="max-width: 450px;">
+    <section class="register-section">
+        <!-- 3. 玻璃拟态卡片 -->
+        <div class="glass-card register-wrapper hover-lift">
+            
+            <!-- 步骤 1: 注册表单 -->
+            <div id="registration-step">
+                <div class="register-header">
+                    <h2><i class="fas fa-user-plus"></i> 建立档案</h2>
+                    <p>加入 Contega 网络，开始您的筑界之旅。</p>
+                </div>
                 
-                <!-- 步骤 1: 注册表单 -->
-                <div id="registration-step">
-                    <h2><i class="fas fa-user-plus"></i> 创建玩家账号</h2>
-                    <form id="registerForm" class="login-form">
-                        <div class="form-group">
-                            <label for="username"><i class="fas fa-user"></i> 玩家名</label>
-                            <input type="text" id="username" required placeholder="输入您的游戏ID">
-                        </div>
-                        <div class="form-group">
-                            <label for="email"><i class="fas fa-envelope"></i> 邮箱</label>
-                            <input type="email" id="email" required placeholder="用于接收验证码">
-                        </div>
-                        <div class="form-group">
-                            <label for="password"><i class="fas fa-key"></i> 密码</label>
-                            <input type="password" id="password" required placeholder="设置您的登录密码">
-                        </div>
-                        <div class="form-group">
-                            <label for="confirmPassword"><i class="fas fa-redo"></i> 确认密码</label>
-                            <input type="password" id="confirmPassword" required placeholder="再次输入您的密码">
-                        </div>
-                        <button type="submit" class="minecraft-btn">
-                            <i class="fas fa-paper-plane"></i> 发送验证码
-                        </button>
-                    </form>
+                <div class="step-indicator">
+                    <span class="step-dot active"></span>
+                    <span class="step-dot"></span>
                 </div>
 
-                <!-- 步骤 2: 验证码表单 (初始隐藏) -->
-                <div id="verification-step" style="display: none;">
-                    <h2><i class="fas fa-shield-alt"></i> 邮箱验证</h2>
-                    <p style="text-align: center; margin-bottom: 1.5rem; color: var(--text-color-secondary);">我们已向您的邮箱发送了一个6位数验证码，请检查并输入。</p>
-                    <form id="verificationForm" class="login-form">
-                        <div class="form-group">
-                            <label for="verificationCode"><i class="fas fa-hashtag"></i> 验证码</label>
-                            <input type="text" id="verificationCode" required placeholder="输入6位数验证码" maxlength="6" pattern="\d{6}" inputmode="numeric">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="username">账户 ID (游戏内名称)</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-user-astronaut"></i>
+                            <input type="text" id="username" class="ios-input" required placeholder="Player Name">
                         </div>
-                        <button type="submit" class="minecraft-btn">
-                            <i class="fas fa-check"></i> 完成注册
-                        </button>
-                    </form>
-                    <div class="resend-container">
-                        <button id="resend-btn" class="action-link" disabled>60秒后可重新发送</button>
-                        <span style="color: var(--text-color-secondary); margin: 0 8px;">|</span>
-                        <a href="#" id="back-to-register-link" class="action-link">邮箱填错了？返回修改</a>
                     </div>
+                    <div class="form-group">
+                        <label for="email">通讯地址 (Email)</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-envelope"></i>
+                            <input type="email" id="email" class="ios-input" required placeholder="name@example.com">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">安全密钥</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-lock"></i>
+                            <input type="password" id="password" class="ios-input" required placeholder="设置密码">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirmPassword">确认密钥</label>
+                        <div class="input-wrapper">
+                            <i class="fas fa-check-double"></i>
+                            <input type="password" id="confirmPassword" class="ios-input" required placeholder="确认密码">
+                        </div>
+                    </div>
+                    <button type="submit" class="ios-btn-primary full-width" style="width: 100%; justify-content: center; margin-top: 10px;">
+                        <i class="fas fa-paper-plane"></i> 发送验证码
+                    </button>
+                </form>
+            </div>
+
+            <!-- 步骤 2: 验证码表单 (初始隐藏) -->
+            <div id="verification-step" style="display: none;">
+                <div class="register-header">
+                    <h2><i class="fas fa-shield-alt"></i> 身份核验</h2>
+                    <p>六位数字代码已发送至您的通讯终端。</p>
                 </div>
-                
-                <div id="formMessage" class="message" style="margin-top: 15px; text-align: center;"></div>
-                <p style="text-align: center; margin-top: 20px;">
-                    已有账号？ <a href="login.html" style="color: var(--link-color);">点此登录</a>
-                </p>
+
+                <div class="step-indicator">
+                    <span class="step-dot"></span>
+                    <span class="step-dot active"></span>
+                </div>
+
+                <form id="verificationForm">
+                    <div class="form-group">
+                        <label for="verificationCode" style="text-align: center;">输入验证代码</label>
+                        <div class="input-wrapper">
+                            <!-- 这里的图标可以去掉，因为验证码通常是居中的 -->
+                            <input type="text" id="verificationCode" class="ios-input" required placeholder="------" maxlength="6" pattern="\d{6}" inputmode="numeric">
+                        </div>
+                    </div>
+                    <button type="submit" class="ios-btn-primary full-width" style="width: 100%; justify-content: center;">
+                        <i class="fas fa-check-circle"></i> 完成接入
+                    </button>
+                </form>
+
+                <div class="resend-container">
+                    <button id="resend-btn" class="action-link" disabled>60秒后重新请求</button>
+                    <span style="opacity: 0.3; margin: 0 8px;">|</span>
+                    <button id="back-to-register-link" class="action-link" style="color: var(--ios-text-secondary);">修改邮箱</button>
+                </div>
+            </div>
+            
+            <div id="formMessage" class="message"></div>
+
+            <div class="login-footer">
+                <p>已持有身份档案？ <a href="login.html">直接接入</a></p>
             </div>
         </div>
     </section>
 
+    <!-- 复用主脚本 (处理导航栏等) -->
+    <script src="script.js"></script>
+
+    <!-- 注册逻辑脚本 -->
     <script>
         const registerStep = document.getElementById('registration-step');
         const verificationStep = document.getElementById('verification-step');
@@ -108,16 +287,39 @@
         
         let countdownTimer;
 
+        // 辅助函数：显示消息（带颜色和图标）
+        const showMessage = (text, type = 'error') => {
+            messageDiv.textContent = text;
+            if (type === 'success') {
+                messageDiv.style.color = '#0d9488'; // Teal
+                messageDiv.style.background = 'rgba(13, 148, 136, 0.1)';
+            } else if (type === 'info') {
+                messageDiv.style.color = 'var(--ios-text-secondary)';
+                messageDiv.style.background = 'transparent';
+            } else {
+                messageDiv.style.color = '#ef4444'; // Red
+                messageDiv.style.background = 'rgba(239, 68, 68, 0.1)';
+                // 震动效果
+                const card = document.querySelector('.glass-card');
+                card.style.transform = 'translateX(5px)';
+                setTimeout(() => card.style.transform = 'translateX(-5px)', 100);
+                setTimeout(() => card.style.transform = 'none', 200);
+            }
+        };
+
         const startResendCountdown = () => {
             let seconds = 60;
             resendBtn.disabled = true;
+            resendBtn.style.color = 'var(--ios-text-secondary)';
+            
             countdownTimer = setInterval(() => {
                 seconds--;
-                resendBtn.textContent = `${seconds}秒后可重新发送`;
+                resendBtn.textContent = `${seconds}秒后重新请求`;
                 if (seconds <= 0) {
                     clearInterval(countdownTimer);
                     resendBtn.textContent = '重新发送验证码';
                     resendBtn.disabled = false;
+                    resendBtn.style.color = 'var(--ios-primary)';
                 }
             }, 1000);
         };
@@ -126,6 +328,7 @@
             localStorage.removeItem('registrationData');
             clearInterval(countdownTimer);
             messageDiv.textContent = '';
+            messageDiv.style.background = 'transparent';
             verificationStep.style.display = 'none';
             registerStep.style.display = 'block';
         };
@@ -138,13 +341,12 @@
         const handleResendCode = async () => {
             const registrationData = JSON.parse(localStorage.getItem('registrationData'));
             if (!registrationData) {
-                messageDiv.textContent = '注册信息已过期，请返回重新注册。';
-                messageDiv.style.color = '#e74c3c';
+                showMessage('注册会话已过期，请重新填写信息。');
                 return;
             }
             resendBtn.disabled = true;
-            messageDiv.textContent = '正在重新发送...';
-            messageDiv.style.color = 'var(--text-color-secondary)';
+            showMessage('正在重新请求数据包...', 'info');
+            
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
@@ -152,13 +354,12 @@
                     body: JSON.stringify(registrationData)
                 });
                 const result = await response.json();
-                if (!response.ok) { throw new Error(result.error || '发送失败，请稍后再试。'); }
-                messageDiv.textContent = '新的验证码已发送！';
-                messageDiv.style.color = '#2ecc71';
+                if (!response.ok) { throw new Error(result.error || '请求失败，网络波动。'); }
+                
+                showMessage('验证代码已重新发送！', 'success');
                 startResendCountdown();
             } catch (error) {
-                messageDiv.textContent = error.message;
-                messageDiv.style.color = '#e74c3c';
+                showMessage(error.message);
                 resendBtn.disabled = false;
             }
         };
@@ -172,17 +373,20 @@
             const password = document.getElementById('password').value;
             const confirmPassword = document.getElementById('confirmPassword').value;
             const submitButton = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitButton.innerHTML;
 
             if (password !== confirmPassword) {
-                messageDiv.textContent = '两次输入的密码不一致。';
-                messageDiv.style.color = '#e74c3c';
+                showMessage('密钥不匹配，请核对后重新输入。');
                 return;
             }
 
             const registrationData = { player_name: username, email, password, confirmPassword };
+            
             submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在发送...';
+            submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 处理请求...';
             messageDiv.textContent = '';
+            messageDiv.style.background = 'transparent';
+
             try {
                 const response = await fetch('/api/register', {
                     method: 'POST',
@@ -190,18 +394,25 @@
                     body: JSON.stringify(registrationData)
                 });
                 const result = await response.json();
-                if (!response.ok) { throw new Error(result.error || '发送验证码失败，请稍后再试。'); }
-                messageDiv.textContent = '验证码已成功发送至您的邮箱，请查收！';
-                messageDiv.style.color = '#2ecc71';
+                if (!response.ok) { throw new Error(result.error || '无法发送验证码，请稍后再试。'); }
+                
+                showMessage('验证码已发送至终端，请查收！', 'success');
                 localStorage.setItem('registrationData', JSON.stringify(registrationData));
-                registerStep.style.display = 'none';
-                verificationStep.style.display = 'block';
+                
+                // 切换步骤动画
+                registerStep.style.opacity = '0';
+                setTimeout(() => {
+                    registerStep.style.display = 'none';
+                    verificationStep.style.display = 'block';
+                    verificationStep.style.opacity = '0';
+                    setTimeout(() => verificationStep.style.opacity = '1', 50);
+                }, 300);
+
                 startResendCountdown();
             } catch (error) {
-                messageDiv.textContent = error.message;
-                messageDiv.style.color = '#e74c3c';
+                showMessage(error.message);
                 submitButton.disabled = false;
-                submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> 发送验证码';
+                submitButton.innerHTML = originalBtnText;
             }
         });
 
@@ -209,15 +420,18 @@
             e.preventDefault();
             const registrationData = JSON.parse(localStorage.getItem('registrationData'));
             if (!registrationData || !registrationData.email) {
-                messageDiv.textContent = '无法找到您的邮箱信息，可能是页面已过期，请返回重新注册。';
-                messageDiv.style.color = '#e74c3c';
+                showMessage('数据包丢失，请返回重新注册。');
                 return;
             }
             const code = document.getElementById('verificationCode').value.trim();
             const submitButton = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitButton.innerHTML;
+            
             submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在验证...';
+            submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 正在写入档案...';
             messageDiv.textContent = '';
+            messageDiv.style.background = 'transparent';
+
             try {
                 const response = await fetch('/api/verify-email', {
                     method: 'POST',
@@ -225,21 +439,30 @@
                     body: JSON.stringify({ email: registrationData.email, code })
                 });
                 const result = await response.json();
-                if (!response.ok) { throw new Error(result.error || '验证失败，请检查验证码是否正确。'); }
-                messageDiv.textContent = '注册成功！正在跳转到登录页面...';
-                messageDiv.style.color = '#2ecc71';
+                if (!response.ok) { throw new Error(result.error || '验证失败，代码无效。'); }
+                
+                showMessage('档案建立成功！正在接入系统...', 'success');
                 localStorage.removeItem('registrationData');
                 clearInterval(countdownTimer);
-                setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+                setTimeout(() => { window.location.href = 'login.html'; }, 1500);
             } catch (error) {
-                messageDiv.textContent = error.message;
-                messageDiv.style.color = '#e74c3c';
+                showMessage(error.message);
                 submitButton.disabled = false;
-                submitButton.innerHTML = '<i class="fas fa-check"></i> 完成注册';
+                submitButton.innerHTML = originalBtnText;
             }
         });
 
         document.addEventListener('DOMContentLoaded', () => {
+            // 简单的淡入动画
+            const card = document.querySelector('.glass-card');
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            setTimeout(() => {
+                card.style.transition = 'all 0.6s ease';
+                card.style.opacity = '1';
+                card.style.transform = 'translateY(0)';
+            }, 100);
+
             const registrationData = localStorage.getItem('registrationData');
             if (registrationData) {
                 registerStep.style.display = 'none';

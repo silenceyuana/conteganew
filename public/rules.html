@@ -3,104 +3,291 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>服务器规则 - 筑界物语服务器</title>
-    <link rel="icon" type="image/x-icon" href="/icon.ico">
+    <title>界域法则 - Contega 筑界物语</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- 规则页面专属样式 -->
     <style>
-        .rules-page { padding: 120px 0 60px; min-height: 100vh; }
-        .rules-header { text-align: center; margin-bottom: 3rem; }
-        .rules-header h1 { font-size: 3rem; color: #4CAF50; margin-bottom: 1rem; }
-        .rules-header p { font-size: 1.2rem; opacity: 0.9; }
-        .rules-category { background: rgba(0, 0, 0, 0.2); border-radius: 10px; padding: 2rem; margin-bottom: 2rem; border: 1px solid rgba(76, 175, 80, 0.3); }
-        .rules-category h2 { color: #4CAF50; margin-bottom: 1.5rem; font-size: 2rem; border-bottom: 2px solid #4CAF50; padding-bottom: 0.5rem; }
-        .rule-item { margin-bottom: 1.5rem; padding-left: 1rem; border-left: 3px solid #4CAF50; }
-        .rule-item h3 { color: #4CAF50; margin-bottom: 0.5rem; font-size: 1.3rem; }
-        .rule-item p { margin-bottom: 0.5rem; line-height: 1.6; }
-        .consequence { color: #ff6b6b; font-weight: bold; font-size: 0.9rem; }
-        .back-to-home { text-align: center; margin-top: 3rem; }
+        .rules-section {
+            padding: 100px 20px 60px;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        .page-header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            /* 使用红色/橙色渐变代表规则的威严 */
+            background: linear-gradient(135deg, #f87171, #ef4444);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .page-header p {
+            color: var(--ios-text-secondary);
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* 规则分类容器 (Grid 布局) */
+        .rules-grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 单个规则卡片 */
+        .rule-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .rule-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+        }
+
+        /* 规则序号标记 */
+        .rule-badge {
+            align-self: flex-start;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 5px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .rule-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--ios-text-primary);
+        }
+
+        .rule-desc {
+            font-size: 0.95rem;
+            color: var(--ios-text-secondary);
+            line-height: 1.6;
+            flex-grow: 1; /* 让描述占据剩余空间，保证底部对齐 */
+        }
+
+        /* 处罚措施部分 */
+        .punishment-box {
+            margin-top: 15px;
+            background: rgba(0,0,0,0.03);
+            border-left: 3px solid #ef4444;
+            padding: 10px 15px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.85rem;
+        }
+        .punishment-label {
+            color: #ef4444;
+            font-weight: 700;
+            margin-bottom: 4px;
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+        }
+        .punishment-text {
+            color: var(--ios-text-primary);
+            font-weight: 500;
+        }
+
+        /* 加载状态 */
+        .loading-state, .error-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px;
+            background: var(--glass-bg);
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            color: var(--ios-text-secondary);
+        }
+        .error-state { color: #ef4444; }
+
+        .back-to-home {
+            text-align: center;
+            margin-top: 50px;
+        }
     </style>
 </head>
 <body>
- 
+
+    <!-- 1. 动态流体背景 -->
+    <div class="ios-background-mesh"></div>
+
     <header>
+        <!-- 2. 导航栏 (复用主页结构) -->
         <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <a href="index.html">
-                        <i class="fas fa-cube"></i>
-                        <span>eulark生电服务器</span>
-                    </a>
-                </div>
-                <ul class="nav-menu">
-                    <li class="nav-item"><a href="index.html#home" class="nav-link">首页</a></li>
-                    <li class="nav-item"><a href="index.html#about" class="nav-link">关于服务器</a></li>
-                    <li class="nav-item"><a href="rules.html" class="nav-link">服务器规则</a></li>
-                    <li class="nav-item"><a href="index.html#commands" class="nav-link">指令大全</a></li>
-                    <li class="nav-item"><a href="sponsors.html" class="nav-link">赞助名单</a></li>
-                    <li class="nav-item"><a href="banned-wall.html" class="nav-link">封禁墙</a></li>
-                    <li class="nav-item"><a href="index.html#contact" class="nav-link">联系我们</a></li>
-                    <li id="auth-container" class="nav-item">
-                        <a href="login.html" class="nav-link"><b>登录</b></a>
-                    </li>
-                </ul>
-                <div class="menu-toggle">
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                    <span class="bar"></span>
-                </div>
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>CONTEGA</span>
+                </a>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">返回主界</a></li>
+            </ul>
+
+            <div class="menu-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
             </div>
         </nav>
     </header>
 
-
-    <main class="rules-page">
+    <main class="rules-section">
         <div class="container">
-            <div class="rules-header">
-                <h1><i class="fas fa-book"></i> 服务器规则</h1>
-                <p>请仔细阅读并遵守以下规则，共同维护良好的游戏环境</p>
+            <div class="page-header">
+                <h1><i class="fas fa-gavel"></i> 界域法则</h1>
+                <p>在筑界物语的维度中，秩序是自由的基石。<br>请务必熟知以下铁律，违者将面临维度的放逐。</p>
             </div>
 
-            <div class="rules-category">
-                <h2><i class="fas fa-users"></i> 基本行为准则</h2>
-                <div class="rule-item"><h3>1. 尊重他人</h3><p>禁止任何形式的辱骂、骚扰、歧视或人身攻击行为。</p><p class="consequence">违规处罚：警告 → 禁言 → 封禁</p></div>
-                <div class="rule-item"><h3>2. 文明交流</h3><p>保持聊天频道文明，禁止刷屏、广告、发布不当内容。</p><p class="consequence">违规处罚：禁言 → 封禁</p></div>
-                <div class="rule-item"><h3>3. 禁止冒充</h3><p>禁止冒充管理员或其他玩家。</p><p class="consequence">违规处罚：直接封禁</p></div>
-            </div>
-
-     
-            <div class="rules-category">
-                <h2><i class="fas fa-gamepad"></i> 游戏行为规则</h2>
-                <div class="rule-item"><h3>4. 禁止破坏</h3><p>未经允许不得破坏他人建筑、偷窃物品。</p><p class="consequence">违规处罚：直接封禁</p></div>
-                <div class="rule-item"><h3>5. 领地保护</h3><p>请合理使用领地系统，不得恶意圈地阻碍他人。</p><p class="consequence">违规处罚：领地重置 → 封禁</p></div>
-                <div class="rule-item"><h3>6. PvP规则</h3><p>仅在指定PvP区域进行战斗，禁止恶意击杀。</p><p class="consequence">违规处罚：警告 → 封禁</p></div>
-            </div>
-
-         
-            <div class="rules-category">
-                <h2><i class="fas fa-cog"></i> 服务器管理</h2>
-                <div class="rule-item"><h3>7. 遵守管理员指令</h3><p>请配合管理员工作，遵守管理员的合理指令。</p><p class="consequence">违规处罚：警告 → 封禁</p></div>
-                <div class="rule-item"><h3>8. 举报机制</h3><p>发现违规行为请及时向管理员举报，不得私自处理。</p></div>
-                <div class="rule-item"><h3>9. 申诉流程</h3><p>对处罚有异议可通过正规渠道申诉，不得在游戏中吵闹。</p></div>
+            <!-- 规则列表容器 -->
+            <div id="rulesContainer" class="rules-grid-container">
+                <!-- 默认显示加载状态 -->
+                <div class="loading-state">
+                    <i class="fas fa-circle-notch fa-spin fa-2x"></i>
+                    <p style="margin-top: 15px;">正在从法则数据库同步...</p>
+                </div>
             </div>
 
             <div class="back-to-home">
-                <a href="index.html" class="cta-button secondary"><i class="fas fa-arrow-left"></i> 返回首页</a>
+                <a href="index.html" class="ios-btn-secondary">
+                    <i class="fas fa-arrow-left"></i> 返回主页
+                </a>
             </div>
         </div>
     </main>
 
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 eulark生电服务器. 保留所有权利.</p>
-            <div class="social-links">
-                <a href="https://qm.qq.com/q/tFM6hyl7Ds" title="QQ"><i class="fab fa-qq"></i></a>
-                <a href="https://space.bilibili.com/3546744358963684" title="Bilibili"><i class="fab fa-bilibili"></i></a>
-            </div>
+            <p>&copy; 2025 Contega (筑界物语). Rules & Guidelines.</p>
         </div>
     </footer>
-
   
+    <!-- 复用主脚本 (处理导航栏滚动、菜单等) -->
     <script src="script.js"></script>
+    
+    <!-- 规则页面专属逻辑 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRules();
+        });
+
+        async function fetchRules() {
+            const container = document.getElementById('rulesContainer');
+            
+            try {
+                // 调用后端 /api/rules 接口
+                // 注意：这里假设您的后端返回的是一个数组，每个对象包含 title, content, (可选) punishment 字段
+                const response = await fetch('/api/rules');
+                
+                if (!response.ok) {
+                    throw new Error(`连接失败 (Status: ${response.status})`);
+                }
+
+                const rules = await response.json();
+                container.innerHTML = ''; // 清空加载动画
+
+                if (rules.length === 0) {
+                    container.innerHTML = `
+                        <div class="loading-state">
+                            <i class="fas fa-scroll"></i>
+                            <p>法则书卷当前为空。</p>
+                        </div>`;
+                    return;
+                }
+
+                // 遍历并渲染规则卡片
+                rules.forEach((rule, index) => {
+                    // 创建卡片元素
+                    const card = document.createElement('div');
+                    card.className = 'rule-card';
+                    
+                    // 动画延时
+                    card.style.opacity = '0';
+                    card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
+
+                    // 构建 HTML 内容
+                    // 我们会尝试适配您的数据库字段。
+                    // 假设数据库字段为: content (规则描述), punishment (惩罚), category (可选)
+                    // 如果您现在的表结构比较简单，只有 content，我们可以做一些简单的解析或直接显示
+                    
+                    // 为了演示效果，我们假设 rule 对象有 content 字段
+                    // 我们把 content 当做标题+描述的混合体，或者根据您的实际字段调整
+                    
+                    // 如果您的数据库是 server_rules 表，通常有 content 字段。
+                    // 这里做一个简单的处理：如果 content 包含冒号，冒号前为标题，后为描述。
+                    
+                    let title = `法则 #${String(index + 1).padStart(2, '0')}`;
+                    let description = rule.content || rule.description || "暂无描述";
+                    let punishment = rule.punishment || "视情节严重程度而定";
+
+                    // 如果您之前没有 punishment 字段，可以在前端写死或者在 content 里解析
+                    // 这里为了美观，如果后端没返回 punishment，我们就不显示那个红框
+                    let punishmentHTML = '';
+                    if (punishment && punishment !== '无') {
+                        punishmentHTML = `
+                            <div class="punishment-box">
+                                <span class="punishment-label"><i class="fas fa-exclamation-triangle"></i> 违规后果</span>
+                                <span class="punishment-text">${escapeHTML(punishment)}</span>
+                            </div>
+                        `;
+                    }
+
+                    card.innerHTML = `
+                        <div class="rule-badge">RULE ${index + 1}</div>
+                        <h3 class="rule-title">${escapeHTML(title)}</h3>
+                        <div class="rule-desc">${escapeHTML(description)}</div>
+                        ${punishmentHTML}
+                    `;
+
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('获取规则失败:', error);
+                container.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-wifi"></i>
+                        <p>无法同步法则数据：${error.message}</p>
+                        <button onclick="fetchRules()" class="ios-btn-secondary" style="margin-top:15px; font-size:0.9rem;">重试</button>
+                    </div>`;
+            }
+        }
+
+        // HTML 转义防止 XSS
+        function escapeHTML(str) {
+            if (!str) return '';
+            return str.toString().replace(/[&<>"']/g, match => ({
+                '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+            }[match]));
+        }
+    </script>
+    
+    <style>
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </body>
 </html>

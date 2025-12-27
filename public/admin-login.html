@@ -3,55 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理员登录 - 筑界物语服务器</title>
+    <title>中枢接入 - Contega Admin</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" type="image/x-icon" href="images/1.png">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        .admin-section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px 20px 40px;
+        }
+        
+        .admin-wrapper {
+            width: 100%;
+            max-width: 400px;
+            padding: 40px 30px;
+            /* 增加一点深色光晕，暗示这是管理后台 */
+            box-shadow: 0 20px 50px rgba(13, 148, 136, 0.15); 
+        }
+
+        .admin-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .admin-header h2 {
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #0d9488, #3b82f6); /* 青色到蓝色的渐变，以此区别于普通用户 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .admin-header p {
+            color: var(--ios-text-secondary);
+            font-size: 0.85rem;
+            font-family: monospace; /* 等宽字体增加代码感 */
+        }
+
+        /* 输入框样式复用并微调 */
+        .form-group { margin-bottom: 20px; }
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            color: var(--ios-text-secondary);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+
+        .input-wrapper { position: relative; }
+        .input-wrapper i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0d9488;
+            opacity: 0.8;
+            font-size: 1rem;
+        }
+
+        .ios-input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            background: var(--input-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            font-size: 1rem;
+            color: var(--ios-text-primary);
+            transition: all 0.3s ease;
+            outline: none;
+        }
+        .ios-input:focus {
+            border-color: #0d9488;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.2);
+        }
+
+        .message {
+            font-size: 0.9rem;
+            padding: 10px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            min-height: 20px;
+        }
+        
+        .footer-note {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.75rem;
+            color: var(--ios-text-secondary);
+            opacity: 0.7;
+        }
+    </style>
 </head>
 <body>
 
+    <!-- 1. 动态流体背景 -->
+    <div class="ios-background-mesh"></div>
+
     <header>
         <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo">
-                    <a href="index.html">
-                        <i class="fas fa-cube"></i>
-                        <span>筑界物语服务器</span>
-                    </a>
-                </div>
-                <ul class="nav-menu">
-                    <li class="nav-item">
-                        <a href="index.html" class="nav-link">返回首页</a>
-                    </li>
-                </ul>
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>CONTEGA</span>
+                </a>
             </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">退出终端</a></li>
+            </ul>
         </nav>
     </header>
 
-
-    <section class="admin-login" style="padding-top: 80px;">
-        <div class="container">
-            <div class="login-container">
-                <h2><i class="fas fa-lock"></i> 管理员登录</h2>
-                <form id="adminLoginForm" class="login-form">
-                    <div class="form-group">
-                        <label for="username"><i class="fas fa-user"></i> 用户名</label>
-                        <input type="text" id="username" name="username" required placeholder="请输入管理员账号">
-                    </div>
-                    <div class="form-group">
-                        <label for="password"><i class="fas fa-key"></i> 密码</label>
-                        <input type="password" id="password" name="password" required placeholder="请输入密码">
-                    </div>
-                    <button type="submit" class="minecraft-btn login-btn">
-                        <i class="fas fa-sign-in-alt"></i> 登录
-                    </button>
-                    <div id="loginMessage" class="message" style="margin-top: 15px; font-weight: bold; text-align: center;"></div>
-                </form>
+    <section class="admin-section">
+        <!-- 2. 玻璃拟态卡片 -->
+        <div class="glass-card admin-wrapper hover-lift">
+            <div class="admin-header">
+                <h2><i class="fas fa-user-shield"></i> 中枢接入</h2>
+                <p>SYSTEM::ROOT_ACCESS // AWAITING CREDENTIALS</p>
             </div>
+
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="username">管理员账户 (Admin ID)</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-id-card-alt"></i>
+                        <input type="text" id="username" class="ios-input" required placeholder="Administrator">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">安全口令 (Secure Key)</label>
+                    <div class="input-wrapper">
+                        <i class="fas fa-fingerprint"></i>
+                        <input type="password" id="password" class="ios-input" required placeholder="••••••••">
+                    </div>
+                </div>
+
+                <button type="submit" class="ios-btn-primary full-width" style="width: 100%; justify-content: center; background: linear-gradient(135deg, #0d9488, #3b82f6);">
+                    <i class="fas fa-network-wired"></i> 建立连接
+                </button>
+
+                <div id="loginMessage" class="message"></div>
+                
+                <div class="footer-note">
+                    <i class="fas fa-lock"></i> 此区域受 Contega 核心法则保护<br>非授权访问将被记录 IP
+                </div>
+            </form>
         </div>
     </section>
 
+    <!-- 登录逻辑脚本 -->
     <script>
+        // 简单的导航栏滚动效果 (复用 script.js 的逻辑片段，为了独立运行保留)
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) header.classList.add('scrolled');
+            else header.classList.remove('scrolled');
+        });
+
         document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
             e.preventDefault(); 
             
@@ -59,49 +176,53 @@
             const password = document.getElementById('password').value;
             const message = document.getElementById('loginMessage');
             const submitButton = this.querySelector('button[type="submit"]');
+            const originalBtnText = submitButton.innerHTML;
 
-
+            // 切换加载状态
             submitButton.disabled = true;
-            submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 正在登录...';
+            submitButton.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> 正在握手...';
             message.textContent = '';
+            message.style.background = 'transparent';
             
             try {
-
                 const response = await fetch('/api/admin/login', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username, password })
                 });
 
                 const result = await response.json();
 
                 if (!response.ok) {
-              
-                    throw new Error(result.error || '登录失败，请检查网络连接');
+                    throw new Error(result.error || '凭证无效，拒绝访问。');
                 }
 
+                message.innerHTML = '<i class="fas fa-unlock"></i> 权限已确认，正在接入中枢...';
+                message.style.color = '#0d9488';
+                message.style.background = 'rgba(13, 148, 136, 0.1)';
                 
-                message.textContent = '登录成功！正在跳转到后台...';
-                message.style.color = '#2ecc71';
-                
-           
+                // 存储 Token
                 localStorage.setItem('adminAuthToken', result.token);
                 
-          
+                // 跳转
                 setTimeout(() => {
                     window.location.href = 'admin-dashboard.html';
                 }, 1000);
 
             } catch (error) {
-          
-                message.textContent = error.message;
-                message.style.color = '#e74c3c';
+                message.innerHTML = `<i class="fas fa-times-circle"></i> ${error.message}`;
+                message.style.color = '#ef4444';
+                message.style.background = 'rgba(239, 68, 68, 0.1)';
                 
-                // 恢复按钮状态
+                // 恢复按钮
                 submitButton.disabled = false;
-                submitButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> 登录';
+                submitButton.innerHTML = originalBtnText;
+
+                // 错误震动特效
+                const card = document.querySelector('.glass-card');
+                card.style.transform = 'translateX(5px)';
+                setTimeout(() => card.style.transform = 'translateX(-5px)', 100);
+                setTimeout(() => card.style.transform = 'none', 200);
             }
         });
     </script>

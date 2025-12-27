@@ -3,311 +3,524 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>管理员后台 - Eulark 生电服务器</title>
-    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <title>中枢控制台 - Contega Admin</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
     <style>
-        .dashboard { padding: 100px 20px 40px; min-height: 100vh; }
-        .dashboard-header { text-align: center; margin-bottom: 2rem; }
-        .dashboard-tabs { display: flex; flex-wrap: wrap; justify-content: center; margin-bottom: 2rem; border-bottom: 2px solid var(--border-color); }
-        .tab-btn { background: none; border: none; color: var(--text-color-secondary); padding: 15px 25px; font-size: 1.1rem; cursor: pointer; position: relative; transition: color 0.3s ease; display: inline-flex; align-items: center; gap: 8px; }
-        .tab-btn.active { color: var(--theme-color); font-weight: bold; }
-        .tab-btn.active::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 100%; height: 2px; background-color: var(--theme-color); }
-        .admin-info { text-align: center; margin-bottom: 1.5rem; }
-        .logout-btn { background: #e74c3c; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
-        .message-table { width: 100%; border-radius: 10px; overflow: hidden; border-collapse: collapse; background-color: var(--card-bg-color); font-size: 0.9rem; }
-        .message-table th, .message-table td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
-        .message-table th { background-color: var(--theme-color-faded); }
-        .action-buttons { white-space: nowrap; }
-        .action-buttons button, .action-btn { background: none; border: 1px solid var(--text-color-secondary); color: var(--text-color); padding: 5px 10px; border-radius: 5px; cursor: pointer; margin-right: 5px; transition: all 0.2s ease; font-size: 0.85rem; }
-        .btn-grant { border-color: #2ecc71; color: #2ecc71; }
-        .btn-grant:hover { background: #2ecc71; color: #fff; }
-        .btn-revoke { border-color: #f39c12; color: #f39c12; }
-        .btn-revoke:hover { background: #f39c12; color: #fff; }
-        .btn-delete { border-color: #e74c3c; color: #e74c3c; }
-        .btn-delete:hover { background: #e74c3c; color: #fff; }
-        .permission-true, .status-online { color: #2ecc71; font-weight: bold; }
-        .permission-false, .status-offline { color: var(--text-color-secondary); }
+        /* Dashboard 专属样式 */
+        .dashboard-section {
+            padding: 100px 20px 40px;
+            min-height: 100vh;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-title h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 5px;
+        }
+        .header-title p { color: var(--ios-text-secondary); font-size: 0.9rem; }
+
+        /* iOS 分段控制器 (Tabs) */
+        .segmented-control {
+            display: inline-flex;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 4px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .tab-btn {
+            padding: 8px 20px;
+            border: none;
+            background: transparent;
+            color: var(--ios-text-secondary);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab-btn.active {
+            background: var(--glass-bg);
+            color: var(--ios-primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .tab-btn:hover:not(.active) { color: var(--ios-text-primary); }
+
+        /* 内容区域 */
+        .view-section { display: none; animation: fadeIn 0.4s ease; }
+        .view-section.active { display: block; }
+
+        /* 表格样式优化 */
+        .admin-table-container {
+            background: var(--glass-bg);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            overflow-x: auto; /* 移动端横向滚动 */
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+        
+        .admin-table th {
+            text-align: left;
+            padding: 15px 20px;
+            color: var(--ios-text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--glass-border);
+            background: rgba(13, 148, 136, 0.05);
+        }
+        
+        .admin-table td {
+            padding: 15px 20px;
+            border-bottom: 1px solid rgba(0,0,0,0.03);
+            color: var(--ios-text-primary);
+            font-size: 0.95rem;
+        }
+        .admin-table tr:last-child td { border-bottom: none; }
+        .admin-table tr:hover td { background: rgba(255,255,255,0.3); }
+
+        /* 操作按钮组 */
+        .action-group { display: flex; gap: 8px; }
+        .btn-icon {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+            border: none;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-delete { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .btn-delete:hover { background: #ef4444; color: white; }
+        
+        .btn-edit { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .btn-edit:hover { background: #3b82f6; color: white; }
+
+        .btn-grant { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .btn-grant:hover { background: #10b981; color: white; }
+
+        /* 状态标签 */
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .status-badge.yes { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .status-badge.no { background: rgba(100, 116, 139, 0.1); color: #64748b; }
+
+        /* 模态框 (Add Modal) */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0; pointer-events: none; transition: opacity 0.3s;
+        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
+        
+        .modal-card {
+            background: var(--nav-bg);
+            border-radius: 24px;
+            padding: 30px;
+            width: 90%; max-width: 500px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: scale(0.9); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .modal-overlay.active .modal-card { transform: scale(1); }
+
+        .toolbar {
+            display: flex; justify-content: flex-end; margin-bottom: 20px;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        @media (max-width: 768px) {
+            .dashboard-header { flex-direction: column; align-items: flex-start; }
+            .segmented-control { width: 100%; overflow-x: auto; }
+            .tab-btn { flex: 1; white-space: nowrap; }
+        }
     </style>
 </head>
 <body>
+
+    <div class="ios-background-mesh"></div>
+
     <header>
         <nav class="navbar">
-            <div class="nav-container">
-                <div class="nav-logo"><a href="index.html"><i class="fas fa-atom"></i><span> Eulark 生电服务器</span></a></div>
-                <ul class="nav-menu"><li class="nav-item"><a href="index.html" class="nav-link">返回首页</a></li></ul>
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>CONTEGA ADMIN</span>
+                </a>
             </div>
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <button onclick="logout()" class="ios-btn-secondary" style="padding: 6px 16px; font-size: 0.85rem; border-color: #ef4444; color: #ef4444;">
+                        <i class="fas fa-sign-out-alt"></i> 退出
+                    </button>
+                </li>
+            </ul>
         </nav>
     </header>
 
-    <main class="dashboard">
+    <main class="dashboard-section">
         <div class="container">
-            <div class="dashboard-header"><h1 id="dashboard-title"></h1></div>
-
-            <div class="dashboard-tabs">
-                <button class="tab-btn active" onclick="switchTab('tickets', this)"><i class="fas fa-envelope-open-text"></i> 工单管理</button>
-                <button class="tab-btn" onclick="switchTab('users', this)"><i class="fas fa-users-cog"></i> 用户管理</button>
-                <button class="tab-btn" onclick="switchTab('owner', this)"><i class="fas fa-user-clock"></i> 服主状态</button>
-            </div>
             
-            <div class="admin-info"><button class="logout-btn" onclick="logout()">安全退出</button></div>
-
-            <div id="tickets-view" style="display: none;">
-                <table class="message-table">
-                    <thead><tr><th>提交时间</th><th>玩家名称</th><th>邮箱</th><th>消息内容</th><th>操作</th></tr></thead>
-                    <tbody id="ticketsContainer"></tbody>
-                </table>
-            </div>
-
-            <div id="users-view" style="display: none;">
-                 <table class="message-table">
-                    <thead><tr><th>ID</th><th>玩家名</th><th>邮箱</th><th>注册时间</th><th>建筑表权限</th><th>操作</th></tr></thead>
-                    <tbody id="usersContainer"></tbody>
-                </table>
-            </div>
-            
-            <div id="owner-view" style="display: none;">
-                <div class="login-container" style="max-width: 500px; margin: 2rem auto;">
-                    <h3>当前状态: <span id="owner-current-status">加载中...</span></h3>
-                    <p style="margin: 1rem 0; color: var(--text-color-secondary);">点击下方按钮来更新您的状态。</p>
-                    <div style="display: flex; gap: 1rem;">
-                        <button id="btn-sleep" class="minecraft-btn" style="flex: 1;" onclick="setSleep()">我睡了</button>
-                        <button id="btn-wake" class="minecraft-btn" style="flex: 1; background: var(--card-bg-color);" onclick="setWake()">我醒了</button>
-                    </div>
-                    <div id="owner-message" class="message" style="margin-top: 1rem;"></div>
+            <!-- 仪表盘头部 -->
+            <div class="dashboard-header">
+                <div class="header-title">
+                    <h1>中枢控制台</h1>
+                    <p>管理服务器法则、公告、用户与反馈。</p>
+                </div>
+                
+                <!-- 分段控制器 (Tabs) -->
+                <div class="segmented-control">
+                    <button class="tab-btn active" onclick="switchTab('rules')"><i class="fas fa-gavel"></i> 法则</button>
+                    <button class="tab-btn" onclick="switchTab('announcements')"><i class="fas fa-bullhorn"></i> 公告</button>
+                    <button class="tab-btn" onclick="switchTab('users')"><i class="fas fa-users"></i> 玩家</button>
+                    <button class="tab-btn" onclick="switchTab('tickets')"><i class="fas fa-inbox"></i> 工单</button>
                 </div>
             </div>
 
-            <div id="loadingIndicator" style="text-align: center; padding: 20px; font-size: 1.2rem; display: none;">
-                <p><i class="fas fa-spinner fa-spin"></i> 正在加载...</p>
+            <!-- 1. 规则管理视图 -->
+            <div id="view-rules" class="view-section active">
+                <div class="toolbar">
+                    <button class="ios-btn-primary" onclick="openModal('ruleModal')"><i class="fas fa-plus"></i> 新增法则</button>
+                </div>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>ID</th><th>规则内容</th><th>惩罚措施</th><th style="text-align:right;">操作</th></tr></thead>
+                        <tbody id="rulesTableBody"></tbody>
+                    </table>
+                </div>
             </div>
+
+            <!-- 2. 公告管理视图 -->
+            <div id="view-announcements" class="view-section">
+                <div class="toolbar">
+                    <button class="ios-btn-primary" onclick="openModal('announceModal')"><i class="fas fa-plus"></i> 发布公告</button>
+                </div>
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>发布时间</th><th>标题</th><th>内容摘要</th><th style="text-align:right;">操作</th></tr></thead>
+                        <tbody id="announceTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. 玩家管理视图 -->
+            <div id="view-users" class="view-section">
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>ID</th><th>玩家名</th><th>邮箱</th><th>建筑表权限</th><th style="text-align:right;">操作</th></tr></thead>
+                        <tbody id="usersTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. 工单处理视图 -->
+            <div id="view-tickets" class="view-section">
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead><tr><th>提交时间</th><th>玩家</th><th>反馈内容</th><th style="text-align:right;">操作</th></tr></thead>
+                        <tbody id="ticketsTableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
         </div>
     </main>
 
+    <!-- 模态框: 新增规则 -->
+    <div id="ruleModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="margin-bottom: 20px; color: var(--ios-primary);">新增界域法则</h3>
+            <form id="addRuleForm">
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-size:0.9rem; color:var(--ios-text-secondary);">规则内容</label>
+                    <textarea id="ruleContent" class="ios-input" rows="3" required placeholder="例如：禁止在主城区域进行PVP..."></textarea>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display:block; margin-bottom:5px; font-size:0.9rem; color:var(--ios-text-secondary);">惩罚措施</label>
+                    <input type="text" id="rulePunishment" class="ios-input" placeholder="例如：封禁 3 天">
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="ios-btn-secondary" onclick="closeModal('ruleModal')">取消</button>
+                    <button type="submit" class="ios-btn-primary">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 模态框: 发布公告 -->
+    <div id="announceModal" class="modal-overlay">
+        <div class="modal-card">
+            <h3 style="margin-bottom: 20px; color: var(--ios-primary);">发布全服公告</h3>
+            <form id="addAnnounceForm">
+                <div style="margin-bottom: 15px;">
+                    <label style="display:block; margin-bottom:5px; font-size:0.9rem; color:var(--ios-text-secondary);">公告标题</label>
+                    <input type="text" id="announceTitle" class="ios-input" required placeholder="例如：服务器维护通知">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display:block; margin-bottom:5px; font-size:0.9rem; color:var(--ios-text-secondary);">公告内容</label>
+                    <textarea id="announceContent" class="ios-input" rows="5" required placeholder="输入公告详情..."></textarea>
+                </div>
+                <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="ios-btn-secondary" onclick="closeModal('announceModal')">取消</button>
+                    <button type="submit" class="ios-btn-primary">发布</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         const adminToken = localStorage.getItem('adminAuthToken');
-        
-        document.addEventListener('DOMContentLoaded', function() {
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
             if (!adminToken) {
-                alert('您没有权限访问此页面，请先登录！');
-                window.location.href = 'admin-login.html';
+                alert('未检测到管理员密钥，请登录。');
+                window.location.href = 'admin-login.html'; // 假设您有这个页面，或者复用 login.html
                 return;
             }
-            switchTab('tickets', document.querySelector('.tab-btn'));
+            // 默认加载第一个标签页的数据
+            loadData('rules');
         });
 
-        function switchTab(tabName, element) {
+        // 切换标签页
+        function switchTab(tabName) {
+            // 更新按钮状态
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            element.classList.add('active');
-            document.getElementById('tickets-view').style.display = 'none';
-            document.getElementById('users-view').style.display = 'none';
-            document.getElementById('owner-view').style.display = 'none';
-            document.getElementById(`${tabName}-view`).style.display = 'block';
-
-            if (tabName === 'tickets') {
-                document.getElementById('dashboard-title').innerHTML = '<i class="fas fa-envelope-open-text"></i> 工单管理';
-                fetchTickets();
-            } else if (tabName === 'users') {
-                document.getElementById('dashboard-title').innerHTML = '<i class="fas fa-users-cog"></i> 用户管理';
-                fetchPlayers();
-            } else if (tabName === 'owner') {
-                document.getElementById('dashboard-title').innerHTML = '<i class="fas fa-user-clock"></i> 服主状态管理';
-                fetchOwnerStatus();
-            }
+            event.currentTarget.classList.add('active');
+            
+            // 更新视图
+            document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
+            document.getElementById(`view-${tabName}`).classList.add('active');
+            
+            // 加载数据
+            loadData(tabName);
         }
 
-        async function fetchTickets() {
-            const container = document.getElementById('ticketsContainer');
-            const loading = document.getElementById('loadingIndicator');
-            loading.style.display = 'block';
-            container.innerHTML = '';
-            try {
-                const response = await fetch('/api/admin/messages', { headers: { 'Authorization': `Bearer ${adminToken}` } });
-                if (response.status === 401 || response.status === 403) { logout(); return; }
-                const tickets = await response.json();
-                if (tickets.length === 0) {
-                    container.innerHTML = '<tr><td colspan="5" style="text-align:center;">没有待处理的工单。</td></tr>';
-                } else {
-                    container.innerHTML = tickets.map(msg => `
-                        <tr id="ticket-${msg.id}">
-                            <td>${new Date(msg.created_at).toLocaleString('zh-CN')}</td>
-                            <td>${escapeHTML(msg.player_name)}</td>
-                            <td>${escapeHTML(msg.email)}</td>
-                            <td>${escapeHTML(msg.message)}</td>
-                            <td class="action-buttons"><button class="action-btn btn-delete" onclick="deleteTicket(${msg.id})">删除</button></td>
-                        </tr>`).join('');
-                }
-            } catch (error) {
-                container.innerHTML = `<tr><td colspan="5" style="color:red;">加载失败: ${error.message}</td></tr>`;
-            } finally {
-                loading.style.display = 'none';
-            }
-        }
+        // 统一数据加载函数
+        async function loadData(type) {
+            const tableMap = {
+                'rules': 'rulesTableBody',
+                'announcements': 'announceTableBody',
+                'users': 'usersTableBody',
+                'tickets': 'ticketsTableBody'
+            };
+            const tbody = document.getElementById(tableMap[type]);
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px;"><i class="fas fa-spinner fa-spin"></i> 数据同步中...</td></tr>';
 
-        async function deleteTicket(id) {
-            if (!confirm('确定要永久删除这条工单吗？')) return;
             try {
-                const response = await fetch(`/api/admin/messages/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${adminToken}` } });
-                if (!response.ok) throw new Error('删除失败');
-                document.getElementById(`ticket-${id}`).remove();
-                alert('删除成功！');
-            } catch (error) {
-                alert(`错误: ${error.message}`);
-            }
-        }
+                // 根据类型决定 API 路径
+                let url = '';
+                if (type === 'rules') url = '/api/rules'; // 公开接口即可，或者是 /api/admin/rules
+                else if (type === 'announcements') url = '/api/announcements'; 
+                else if (type === 'users') url = '/api/admin/players';
+                else if (type === 'tickets') url = '/api/admin/messages';
 
-        async function fetchPlayers() {
-            const container = document.getElementById('usersContainer');
-            const loading = document.getElementById('loadingIndicator');
-            loading.style.display = 'block';
-            container.innerHTML = '';
-            try {
-                const response = await fetch('/api/admin/players', { headers: { 'Authorization': `Bearer ${adminToken}` } });
-                if (!response.ok) throw new Error('获取玩家列表失败');
-                const players = await response.json();
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                });
                 
-                if (players.length === 0) {
-                    container.innerHTML = '<tr><td colspan="6" style="text-align:center;">暂无注册用户。</td></tr>';
-                } else {
-                    container.innerHTML = players.map(p => `
-                        <tr id="player-row-${p.id}">
-                            <td>${p.id}</td>
-                            <td>${escapeHTML(p.player_name)}</td>
-                            <td>${escapeHTML(p.email)}</td>
-                            <td>${new Date(p.created_at).toLocaleDateString('zh-CN')}</td>
-                            <td class="${p.has_permission ? 'permission-true' : 'permission-false'}">${p.has_permission ? '是' : '否'}</td>
-                            <td class="action-buttons">
-                                ${p.has_permission 
-                                    ? `<button class="action-btn btn-revoke" onclick="revokePermission(${p.id})">取消授权</button>` 
-                                    : `<button class="action-btn btn-grant" onclick="grantPermission(${p.id})">授予权限</button>`
-                                }
-                                <button class="action-btn btn-delete" onclick="deletePlayer(${p.id}, '${escapeHTML(p.player_name)}')">删除用户</button>
+                if (response.status === 401 || response.status === 403) {
+                    logout(); return;
+                }
+                
+                const data = await response.json();
+                renderTable(type, data, tbody);
+
+            } catch (error) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:#ef4444;">加载失败: ${error.message}</td></tr>`;
+            }
+        }
+
+        // 渲染表格逻辑
+        function renderTable(type, data, tbody) {
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--ios-text-secondary);">暂无数据记录。</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = data.map(item => {
+                if (type === 'rules') {
+                    return `
+                        <tr>
+                            <td>#${item.id}</td>
+                            <td>${escapeHTML(item.content)}</td>
+                            <td><span class="status-badge no">${escapeHTML(item.punishment || '无')}</span></td>
+                            <td>
+                                <div class="action-group" style="justify-content: flex-end;">
+                                    <button class="btn-icon btn-delete" onclick="deleteItem('rules', ${item.id})" title="删除"><i class="fas fa-trash"></i></button>
+                                </div>
                             </td>
-                        </tr>`).join('');
+                        </tr>`;
+                } else if (type === 'announcements') {
+                    return `
+                        <tr>
+                            <td>${new Date(item.created_at || Date.now()).toLocaleDateString()}</td>
+                            <td style="font-weight:600;">${escapeHTML(item.title)}</td>
+                            <td>${escapeHTML(item.content).substring(0, 30)}...</td>
+                            <td>
+                                <div class="action-group" style="justify-content: flex-end;">
+                                    <button class="btn-icon btn-delete" onclick="deleteItem('announcements', ${item.id})"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </td>
+                        </tr>`;
+                } else if (type === 'users') {
+                    return `
+                        <tr>
+                            <td>${item.id}</td>
+                            <td>${escapeHTML(item.player_name)}</td>
+                            <td>${escapeHTML(item.email)}</td>
+                            <td>
+                                <span class="status-badge ${item.has_permission ? 'yes' : 'no'}">
+                                    ${item.has_permission ? '已授权' : '未授权'}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="action-group" style="justify-content: flex-end;">
+                                    ${item.has_permission 
+                                        ? `<button class="btn-icon btn-delete" onclick="togglePermission(${item.id}, 'revoke')" title="撤销权限"><i class="fas fa-ban"></i></button>` 
+                                        : `<button class="btn-icon btn-grant" onclick="togglePermission(${item.id}, 'grant')" title="授予权限"><i class="fas fa-check"></i></button>`
+                                    }
+                                    <button class="btn-icon btn-delete" onclick="deleteItem('players', ${item.id})" title="删除用户"><i class="fas fa-user-times"></i></button>
+                                </div>
+                            </td>
+                        </tr>`;
+                } else if (type === 'tickets') {
+                    return `
+                        <tr>
+                            <td>${new Date(item.created_at).toLocaleString()}</td>
+                            <td>${escapeHTML(item.player_name)}</td>
+                            <td>${escapeHTML(item.message)}</td>
+                            <td>
+                                <div class="action-group" style="justify-content: flex-end;">
+                                    <button class="btn-icon btn-grant" onclick="window.location.href='mailto:${item.email}'" title="回复邮件"><i class="fas fa-reply"></i></button>
+                                    <button class="btn-icon btn-delete" onclick="deleteItem('messages', ${item.id})" title="删除工单"><i class="fas fa-check"></i></button>
+                                </div>
+                            </td>
+                        </tr>`;
                 }
-            } catch (error) {
-                container.innerHTML = `<tr><td colspan="6" style="color:red;">加载失败: ${error.message}</td></tr>`;
-            } finally {
-                loading.style.display = 'none';
-            }
+            }).join('');
         }
 
-        async function grantPermission(playerId) {
-            if (!confirm(`确定要为 ID 为 ${playerId} 的用户授予建筑表权限吗？`)) return;
+        // --- 通用删除逻辑 ---
+        async function deleteItem(endpointType, id) {
+            if (!confirm('确定要执行删除操作吗？此操作不可逆。')) return;
             try {
-                const response = await fetch('/api/admin/permissions', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${adminToken}` },
-                    body: JSON.stringify({ player_id: playerId })
-                });
-                if (!response.ok) throw new Error((await response.json()).error || '授权失败');
-                alert('授权成功！');
-                fetchPlayers();
-            } catch (error) {
-                alert(`错误: ${error.message}`);
-            }
-        }
-        
-        async function revokePermission(playerId) {
-            if (!confirm(`确定要取消 ID 为 ${playerId} 的用户的建筑表权限吗？`)) return;
-            try {
-                const response = await fetch(`/api/admin/permissions/${playerId}`, {
+                const response = await fetch(`/api/admin/${endpointType}/${id}`, {
                     method: 'DELETE',
                     headers: { 'Authorization': `Bearer ${adminToken}` }
                 });
-                if (!response.ok) throw new Error((await response.json()).error || '取消授权失败');
-                alert('取消授权成功！');
-                fetchPlayers();
-            } catch (error) {
-                alert(`错误: ${error.message}`);
-            }
-        }
-        
-        async function deletePlayer(playerId, playerName) {
-            if (!confirm(`警告：您确定要永久删除用户 "${playerName}" (ID: ${playerId}) 吗？此操作不可恢复！`)) return;
-            try {
-                const response = await fetch(`/api/admin/players/${playerId}`, {
-                    method: 'DELETE',
-                    headers: { 'Authorization': `Bearer ${adminToken}` }
-                });
-                if (!response.ok) throw new Error((await response.json()).error || '删除用户失败');
-                alert('删除用户成功！');
-                fetchPlayers();
-            } catch (error) {
-                alert(`错误: ${error.message}`);
+                if (!response.ok) throw new Error('操作失败');
+                
+                // 刷新当前视图
+                const activeTab = document.querySelector('.view-section.active').id.replace('view-', '');
+                loadData(activeTab);
+            } catch (e) {
+                alert(e.message);
             }
         }
 
-        async function fetchOwnerStatus() {
-            const statusSpan = document.getElementById('owner-current-status');
-            const messageDiv = document.getElementById('owner-message');
-            const sleepBtn = document.getElementById('btn-sleep');
-            const wakeBtn = document.getElementById('btn-wake');
-            statusSpan.textContent = '加载中...';
-            messageDiv.textContent = '';
+        // --- 权限管理 ---
+        async function togglePermission(playerId, action) {
+            const method = action === 'grant' ? 'POST' : 'DELETE';
+            const url = action === 'grant' ? '/api/admin/permissions' : `/api/admin/permissions/${playerId}`;
+            const body = action === 'grant' ? JSON.stringify({ player_id: playerId }) : null;
+
             try {
-                const response = await fetch('/api/owner-status');
-                if (!response.ok) throw new Error('获取状态失败');
-                const status = await response.json();
-                if (status.is_sleeping) {
-                    statusSpan.textContent = '睡眠中';
-                    statusSpan.className = 'status-offline';
-                    sleepBtn.disabled = true;
-                    wakeBtn.disabled = false;
-                } else {
-                    statusSpan.textContent = '苏醒';
-                    statusSpan.className = 'status-online';
-                    sleepBtn.disabled = false;
-                    wakeBtn.disabled = true;
-                }
-            } catch (error) {
-                statusSpan.textContent = '获取失败';
-                messageDiv.textContent = error.message;
+                const response = await fetch(url, {
+                    method: method,
+                    headers: { 
+                        'Authorization': `Bearer ${adminToken}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: body
+                });
+                if (!response.ok) throw new Error('权限变更失败');
+                loadData('users');
+            } catch (e) {
+                alert(e.message);
             }
         }
 
-        async function setSleep() {
-            const messageDiv = document.getElementById('owner-message');
-            messageDiv.textContent = '正在更新...';
+        // --- 模态框控制 ---
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // --- 表单提交: 新增规则 ---
+        document.getElementById('addRuleForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const content = document.getElementById('ruleContent').value;
+            const punishment = document.getElementById('rulePunishment').value;
+
             try {
-                const response = await fetch('/api/admin/sleep', {
+                // 注意：这里假设后端有 POST /api/admin/rules 接口
+                const response = await fetch('/api/admin/rules', {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                    headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ content, punishment })
                 });
-                if (!response.ok) throw new Error('操作失败');
-                messageDiv.textContent = '状态已更新为“睡眠中”。';
-                fetchOwnerStatus();
-            } catch (error) {
-                messageDiv.textContent = `错误: ${error.message}`;
-            }
-        }
-        
-        async function setWake() {
-            const messageDiv = document.getElementById('owner-message');
-            messageDiv.textContent = '正在更新...';
+                if (!response.ok) throw new Error('添加失败');
+                closeModal('ruleModal');
+                e.target.reset();
+                loadData('rules');
+            } catch (e) { alert(e.message); }
+        });
+
+        // --- 表单提交: 发布公告 ---
+        document.getElementById('addAnnounceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('announceTitle').value;
+            const content = document.getElementById('announceContent').value;
+
             try {
-                const response = await fetch('/api/admin/wake', {
+                // 注意：这里假设后端有 POST /api/admin/announcements 接口
+                const response = await fetch('/api/admin/announcements', {
                     method: 'POST',
-                    headers: { 'Authorization': `Bearer ${adminToken}` }
+                    headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content })
                 });
-                if (!response.ok) throw new Error('操作失败');
-                messageDiv.textContent = '状态已更新为“苏醒”。';
-                fetchOwnerStatus();
-            } catch (error) {
-                messageDiv.textContent = `错误: ${error.message}`;
-            }
-        }
+                if (!response.ok) throw new Error('发布失败');
+                closeModal('announceModal');
+                e.target.reset();
+                loadData('announcements');
+            } catch (e) { alert(e.message); }
+        });
 
         function logout() {
             localStorage.removeItem('adminAuthToken');
-            alert('已安全退出');
             window.location.href = 'index.html';
         }
 
         function escapeHTML(str) {
-            if (str === null || str === undefined) return '';
-            return str.toString().replace(/[&<>"']/g, match => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[match]));
+            if (!str) return '';
+            return str.toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#39;'}[m]));
         }
     </script>
 </body>
