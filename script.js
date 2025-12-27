@@ -9,7 +9,7 @@ const ADMIN_AUTH_TOKEN = localStorage.getItem('adminAuthToken');
 const IS_ADMIN_LOGGED_IN = !!ADMIN_AUTH_TOKEN;
 
 // 服务器 IP 地址 (请修改为您实际的服务器 IP)
-const SERVER_IP = 'play.eulark.tech'; 
+const SERVER_IP = '110.42.47.254:25585'; 
 
 document.addEventListener('DOMContentLoaded', function() {
     initializeBaseUI();
