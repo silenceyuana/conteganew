@@ -1,63 +1,65 @@
 /* =================================================================
-// styles.css - Contega (筑界物语)
-// 主题: iOS 26 Concept (Cyan-Green / Nature Tech Theme)
+// styles.css - Contega (筑界物语) - 春节主题 (2026 马年红金喜庆)
+// 主题: iOS 26 Concept 风格 + 中国春节红金配色
 // ================================================================= */
 
 :root {
-    /* --- 核心色盘 (青绿渐变主题) --- */
-    /* 主色调：一种介于青色和绿色之间的 Teal 色 */
-    --ios-primary: #0d9488;  /* Teal 600 */
-    --ios-primary-light: #2dd4bf; /* Teal 400 */
-    
-    /* 渐变辅助色 */
-    --ios-gradient-start: #06b6d4; /* Cyan */
-    --ios-gradient-end: #10b981;   /* Emerald */
-    
-    /* 强调色 */
-    --ios-accent: #34d399; /* Bright Emerald */
-    
-    /* 文字颜色 */
-    --ios-text-primary: #0f172a; /* 深蓝灰，比纯黑更有质感 */
-    --ios-text-secondary: #475569;
-    
-    /* 背景流体色 (浅色模式 - 极光绿) */
-    --ios-bg-mesh-1: #ccfbf1; /* Pale Teal */
-    --ios-bg-mesh-2: #dcfce7; /* Pale Green */
+    /* --- 核心色盘 (红金喜庆主题) --- */
+    --ios-primary: #c41e3a;          /* 中国红 主色 */
+    --ios-primary-light: #e63946;    /* 稍浅红，用于 hover */
 
-    /* --- 玻璃材质变量 --- */
-    --glass-bg: rgba(255, 255, 255, 0.60);
-    --glass-border: rgba(255, 255, 255, 0.6);
-    --glass-shadow: 0 8px 32px 0 rgba(16, 185, 129, 0.05); /* 阴影带一点点绿 */
+    /* 渐变辅助色 - 经典红金渐变 */
+    --ios-gradient-start: #c41e3a;   /* 深红 */
+    --ios-gradient-end: #d4af37;     /* 经典金色 */
+
+    /* 强调色 */
+    --ios-accent: #d4af37;           /* 金色 */
+
+    /* 文字颜色 */
+    --ios-text-primary: #1a1a1a;     /* 深色文字 */
+    --ios-text-secondary: #4a4a4a;
+
+    /* 背景流体色 (春节氛围 - 暖红金渐变) */
+    --ios-bg-mesh-1: #fff5f5;        /* 浅粉红 */
+    --ios-bg-mesh-2: #fffbe6;        /* 浅金黄 */
+    --ios-bg-mesh-3: #ffcccc;        /* 辅助浅红 */
+    --ios-bg-mesh-4: #fff3cd;        /* 辅助浅金 */
+
+    /* 玻璃材质 - 偏暖调，带金边 */
+    --glass-bg: rgba(255, 255, 255, 0.75);
+    --glass-border: rgba(212, 175, 55, 0.3); /* 金色边框 */
+    --glass-shadow: 0 8px 32px 0 rgba(212, 175, 55, 0.12); /* 金色光晕 */
     --glass-blur: 30px;
     --glass-radius: 28px;
-    
-    /* --- 组件特定 --- */
-    --nav-bg: rgba(255, 255, 255, 0.85);
-    --input-bg: rgba(255, 255, 255, 0.5);
-    --code-bg: rgba(13, 148, 136, 0.05); /* 极淡的青色背景 */
+
+    /* 组件特定 */
+    --nav-bg: rgba(255, 255, 255, 0.92);
+    --input-bg: rgba(255, 245, 245, 0.6);
+    --code-bg: rgba(196, 30, 58, 0.08); /* 极淡的红色背景 */
 }
 
-/* --- 深色模式适配 (Dark Mode) --- */
+/* --- 深色模式适配 (春节暗黑红金版) --- */
 @media (prefers-color-scheme: dark) {
     :root {
-        --ios-text-primary: #f1f5f9;
-        --ios-text-secondary: #94a3b8;
-        
-        /* 深色背景流体 (深海幽光) */
-        --ios-bg-mesh-1: #0f1c1a; 
-        --ios-bg-mesh-2: #042f2e;
-        
-        --glass-bg: rgba(20, 30, 30, 0.65); /* 偏绿黑的玻璃 */
-        --glass-border: rgba(255, 255, 255, 0.08);
-        --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
-        
-        --nav-bg: rgba(20, 35, 35, 0.8);
-        --input-bg: rgba(0, 0, 0, 0.3);
-        --code-bg: rgba(255, 255, 255, 0.05);
+        --ios-text-primary: #f8f9fa;
+        --ios-text-secondary: #adb5bd;
+
+        --ios-bg-mesh-1: #2d0a0e;     /* 暗红 */
+        --ios-bg-mesh-2: #3a2a0f;     /* 暗金 */
+        --ios-bg-mesh-3: #3d0f14;
+        --ios-bg-mesh-4: #4a3a0f;
+
+        --glass-bg: rgba(40, 20, 20, 0.75);
+        --glass-border: rgba(212, 175, 55, 0.25);
+        --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.55);
+
+        --nav-bg: rgba(30, 20, 20, 0.88);
+        --input-bg: rgba(40, 20, 20, 0.5);
+        --code-bg: rgba(212, 175, 55, 0.1);
     }
 }
 
-/* --- 1. 全局重置 --- */
+/* --- 全局重置 --- */
 * { margin: 0; padding: 0; box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
 
 body {
@@ -69,7 +71,7 @@ body {
     background-color: var(--ios-bg-mesh-1);
 }
 
-/* --- 2. 动态背景 (青绿流体) --- */
+/* --- 动态背景 (红金流体 + 春节氛围) --- */
 .ios-background-mesh {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
@@ -77,10 +79,21 @@ body {
     background: 
         radial-gradient(at 0% 0%, var(--ios-bg-mesh-1) 0px, transparent 50%),
         radial-gradient(at 100% 0%, var(--ios-bg-mesh-2) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, #a7f3d0 0px, transparent 50%), /* 增加一点薄荷绿 */
-        radial-gradient(at 0% 100%, var(--ios-bg-mesh-2) 0px, transparent 50%);
+        radial-gradient(at 100% 100%, var(--ios-bg-mesh-3) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, var(--ios-bg-mesh-4) 0px, transparent 50%);
     background-size: 200% 200%;
-    animation: gradientMove 15s ease infinite alternate;
+    animation: gradientMove 18s ease infinite alternate;
+}
+
+.ios-background-mesh::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: 
+        radial-gradient(circle at 25% 35%, rgba(212, 175, 55, 0.15) 0%, transparent 25%),
+        radial-gradient(circle at 75% 65%, rgba(212, 175, 55, 0.12) 0%, transparent 20%);
+    opacity: 0.6;
+    animation: twinkle 10s infinite alternate;
 }
 
 @keyframes gradientMove {
@@ -89,10 +102,15 @@ body {
     100% { background-position: 0% 50%; }
 }
 
+@keyframes twinkle {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.75; }
+}
+
 a { text-decoration: none; color: inherit; transition: opacity 0.2s; }
 .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 2; }
 
-/* --- 3. 玻璃组件基础 --- */
+/* --- 玻璃组件基础 --- */
 .glass-panel, .glass-card {
     background: var(--glass-bg);
     backdrop-filter: blur(var(--glass-blur));
@@ -110,10 +128,10 @@ a { text-decoration: none; color: inherit; transition: opacity 0.2s; }
 
 .hover-lift:hover {
     transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 20px 40px rgba(16, 185, 129, 0.15); /* 悬浮时泛起绿光 */
+    box-shadow: 0 20px 40px rgba(212, 175, 55, 0.25); /* 金色悬浮光 */
 }
 
-/* --- 4. 导航栏 (悬浮岛) --- */
+/* --- 导航栏 (悬浮岛) --- */
 header {
     position: fixed;
     top: 24px;
@@ -137,7 +155,7 @@ header {
     backdrop-filter: blur(25px) saturate(180%);
     -webkit-backdrop-filter: blur(25px) saturate(180%);
     border: 1px solid var(--glass-border);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
     
     display: flex;
     align-items: center;
@@ -155,9 +173,9 @@ header {
     gap: 8px;
     color: var(--ios-text-primary);
 }
-/* Logo 图标变色 */
+
 .nav-logo i {
-    color: var(--ios-primary); 
+    color: var(--ios-accent); 
     background: -webkit-linear-gradient(45deg, var(--ios-gradient-start), var(--ios-gradient-end));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -181,7 +199,7 @@ header {
 }
 
 .nav-link:hover {
-    background: rgba(13, 148, 136, 0.08); /* 悬浮淡青色 */
+    background: rgba(196, 30, 58, 0.12); /* 悬浮淡红色 */
     color: var(--ios-primary);
 }
 
@@ -190,7 +208,7 @@ header {
     color: white !important;
     padding: 6px 18px;
     margin-left: 5px;
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.35);
     border: none;
 }
 
@@ -226,7 +244,7 @@ header {
     transform: translateY(-8px) rotate(-45deg);
 }
 
-/* 导航栏滚动交互优化 - Liquid Glass */
+/* 导航栏滚动交互 */
 header, .navbar {
     transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
@@ -245,16 +263,14 @@ header.scrolled .navbar {
     border: none;
     background: rgba(255, 255, 255, 0.18);
     backdrop-filter: blur(20px) saturate(180%) brightness(140%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(140%);
-    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
 }
 
 @media (prefers-color-scheme: dark) {
     header.scrolled .navbar {
-        background: rgba(20, 30, 30, 0.4);
+        background: rgba(40, 20, 20, 0.4);
         backdrop-filter: blur(20px) saturate(180%) brightness(120%);
-        -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(120%);
-        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
+        box-shadow: 0 1px 0 rgba(212, 175, 55, 0.15);
     }
 }
 
@@ -262,10 +278,10 @@ header.scrolled .nav-link {
     color: var(--ios-text-primary);
 }
 header.scrolled .nav-link:hover {
-    background: rgba(13, 148, 136, 0.15);
+    background: rgba(196, 30, 58, 0.2);
 }
 
-/* --- 5. Hero 区域 --- */
+/* --- Hero 区域 --- */
 .hero {
     min-height: 100vh;
     display: flex;
@@ -288,7 +304,7 @@ header.scrolled .nav-link:hover {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: rgba(255, 255, 255, 0.6);
+    background: rgba(212, 175, 55, 0.25);
     color: var(--ios-primary);
     padding: 6px 16px;
     border-radius: 20px;
@@ -296,9 +312,9 @@ header.scrolled .nav-link:hover {
     font-weight: 700;
     margin-bottom: 24px;
     letter-spacing: 0.5px;
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(212, 175, 55, 0.4);
     backdrop-filter: blur(10px);
-    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.1);
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
 }
 
 .hero-content h1 {
@@ -307,17 +323,9 @@ header.scrolled .nav-link:hover {
     letter-spacing: -2px;
     margin-bottom: 15px;
     line-height: 1.1;
-    background: linear-gradient(135deg, #0f766e 0%, #15803d 100%);
+    background: linear-gradient(135deg, var(--ios-gradient-start) 0%, var(--ios-gradient-end) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-}
-
-@media (prefers-color-scheme: dark) {
-    .hero-content h1 {
-        background: linear-gradient(135deg, #2dd4bf 0%, #4ade80 100%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
 }
 
 .hero-content h1 .en-title {
@@ -345,8 +353,8 @@ header.scrolled .nav-link:hover {
     align-items: center;
     gap: 10px;
     padding: 8px 20px;
-    background: rgba(255, 255, 255, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(212, 175, 55, 0.4);
     border-radius: 50px;
     margin-bottom: 40px;
     font-weight: 600;
@@ -355,7 +363,7 @@ header.scrolled .nav-link:hover {
     color: var(--ios-text-primary);
 }
 
-.status-dot { width: 8px; height: 8px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 10px #22c55e; }
+.status-dot { width: 8px; height: 8px; background: #d4af37; border-radius: 50%; box-shadow: 0 0 12px #d4af37; }
 .pulsing { animation: pulse 2s infinite; }
 @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.2); } 100% { opacity: 1; transform: scale(1); } }
 
@@ -377,19 +385,19 @@ header.scrolled .nav-link:hover {
 .ios-btn-primary {
     background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
     color: white;
-    box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
 }
 
 .ios-btn-secondary {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(10px);
     color: var(--ios-text-primary);
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
 }
 
 .ios-btn-primary:hover, .ios-btn-secondary:hover { transform: scale(1.03); }
 
-/* --- 6. 通用内容样式 --- */
+/* --- 通用内容样式 --- */
 section { padding: 60px 0; }
 .full-width { width: 100%; }
 
@@ -420,7 +428,7 @@ section h2 i {
 .grid-item i { 
     font-size: 1.4rem; 
     color: var(--ios-primary); 
-    background: rgba(13, 148, 136, 0.1); 
+    background: rgba(196, 30, 58, 0.15); 
     padding: 12px; 
     border-radius: 50%; 
 }
@@ -429,7 +437,7 @@ section h2 i {
     background: var(--input-bg);
     border-radius: 20px;
     padding: 24px;
-    border: 1px solid rgba(0,0,0,0.05);
+    border: 1px solid rgba(212, 175, 55, 0.3);
 }
 .server-specs h4 { text-align: center; margin-bottom: 20px; color: var(--ios-text-primary); font-size: 1rem; }
 .specs-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
@@ -443,12 +451,12 @@ section h2 i {
     background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    opacity: 0.2; 
+    opacity: 0.25; 
     animation: float 6s ease-in-out infinite; 
 }
 @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
-/* --- 7. Rules --- */
+/* --- Rules --- */
 .rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; margin-bottom: 30px; }
 .rule-card { text-align: left; }
 .rule-icon-bg { 
@@ -457,14 +465,14 @@ section h2 i {
     border-radius: 14px; 
     display: flex; align-items: center; justify-content: center; 
     color: white; font-size: 1.1rem; margin-bottom: 15px; 
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
 }
 .rule-card h3 { font-size: 1.1rem; margin-bottom: 8px; color: var(--ios-text-primary); }
 .rule-card p { font-size: 0.9rem; color: var(--ios-text-secondary); }
 .rules-cta { text-align: center; }
 .ios-link { color: var(--ios-primary); font-weight: 600; display: inline-flex; align-items: center; gap: 5px; font-size: 0.95rem; }
 
-/* --- 8. Commands --- */
+/* --- Commands --- */
 .commands-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
 .command-category h3 { margin-bottom: 15px; display: flex; align-items: center; gap: 8px; color: var(--ios-primary); font-size: 1.1rem; }
 .command-list { display: flex; flex-direction: column; gap: 10px; }
@@ -484,7 +492,7 @@ section h2 i {
 }
 .command-item span { font-size: 0.8rem; color: var(--ios-text-secondary); }
 
-/* --- 9. Contact & Footer --- */
+/* --- Contact & Footer --- */
 .contact-wrapper { max-width: 600px; margin: 0 auto; text-align: center; }
 .contact-form textarea {
     width: 100%;
@@ -499,7 +507,7 @@ section h2 i {
     margin-bottom: 20px;
     transition: box-shadow 0.3s;
 }
-.contact-form textarea:focus { box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3); }
+.contact-form textarea:focus { box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.4); }
 
 .footer { padding: 40px 0; text-align: center; margin-top: 20px; }
 .footer p { color: var(--ios-text-secondary); font-size: 0.85rem; margin-bottom: 15px; }
@@ -518,10 +526,10 @@ section h2 i {
     background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end)); 
     color: white; 
     transform: rotate(360deg); 
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 10px rgba(212, 175, 55, 0.4);
 }
 
-/* --- 10. 移动端适配 --- */
+/* --- 移动端适配 --- */
 @media (max-width: 768px) {
     header { top: 15px; padding: 0 10px; }
     .navbar { min-width: auto; width: 100%; padding: 0 15px; }
@@ -536,8 +544,8 @@ section h2 i {
         padding: 20px;
         gap: 10px;
         display: none;
-        box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+        border: 1px solid rgba(212, 175, 55, 0.3);
         margin-left: 0;
     }
     
@@ -559,18 +567,18 @@ section h2 i {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(13, 148, 136, 0.1);
+    background: rgba(196, 30, 58, 0.12);
     padding: 6px 6px 6px 14px;
     border-radius: 30px;
-    border: 1px solid rgba(13, 148, 136, 0.2);
+    border: 1px solid rgba(196, 30, 58, 0.25);
     margin-left: 10px;
     transition: all 0.3s ease;
 }
 
 .user-info-pill:hover {
-    background: rgba(13, 148, 136, 0.15);
-    border-color: rgba(13, 148, 136, 0.3);
-    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+    background: rgba(196, 30, 58, 0.18);
+    border-color: rgba(196, 30, 58, 0.35);
+    box-shadow: 0 4px 12px rgba(212, 175, 55, 0.2);
 }
 
 .user-name-span {
@@ -595,16 +603,16 @@ section h2 i {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #ef4444;
+    color: #c41e3a;
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .logout-btn-small:hover {
-    background: #ef4444;
+    background: #c41e3a;
     color: #ffffff;
     transform: scale(1.1) rotate(90deg);
-    box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
+    box-shadow: 0 4px 10px rgba(196, 30, 58, 0.3);
 }
 
 .logout-btn-small i {
@@ -613,17 +621,16 @@ section h2 i {
 
 @media (prefers-color-scheme: dark) {
     .user-info-pill {
-        background: rgba(45, 212, 191, 0.1);
-        border-color: rgba(45, 212, 191, 0.2);
+        background: rgba(212, 175, 55, 0.15);
+        border-color: rgba(212, 175, 55, 0.3);
     }
     .user-name-span {
-        color: #5eead4;
+        color: #ffd700;
     }
     .logout-btn-small {
         background: rgba(255, 255, 255, 0.1);
     }
 }
-
 
 .menu-toggle:active {
     transform: scale(0.92);
