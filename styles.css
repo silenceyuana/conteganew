@@ -194,48 +194,77 @@ header {
     border: none;
 }
 
-.menu-toggle { display: none; cursor: pointer; flex-direction: column; gap: 5px; margin-right: 15px; }
-.bar { width: 20px; height: 2px; background: var(--ios-text-primary); border-radius: 2px; transition: 0.3s; }
+.menu-toggle {
+    display: none;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 5px;
+    transition: all 0.4s ease;
+    z-index: 1001;
+}
 
-/* --- 导航栏滚动交互优化 (添加到 styles.css) --- */
+.bar {
+    width: 24px;
+    height: 3px;
+    background: var(--ios-text-primary);
+    border-radius: 2px;
+    transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform-origin: center;
+}
 
-/* 为 header 和 navbar 添加平滑过渡动画 */
+/* 汉堡菜单动画 */
+.menu-toggle.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+}
+
+.menu-toggle.active .bar:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0);
+}
+
+.menu-toggle.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+}
+
+/* 导航栏滚动交互优化 - Liquid Glass */
 header, .navbar {
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-/* 当页面滚动时，header 的状态 */
 header.scrolled {
-    top: 0; /* 消除顶部 24px 空隙 */
-    padding: 0; /* 移除左右内边距 */
-    background: rgba(255, 255, 255, 0.8); /* 可选：给整个条加一点背景 */
-    backdrop-filter: blur(10px); /* 确保 header 区域也有模糊 */
-    -webkit-backdrop-filter: blur(10px);
+    top: 0;
+    padding: 0;
+    background: transparent;
 }
 
-/* 当页面滚动时，navbar 的状态 */
 header.scrolled .navbar {
-    width: 100%;       /* 宽度变满 */
-    max-width: 100%;   /* 移除最大宽度限制 */
-    height: 64px;      /* 稍微加高一点，适应通栏模式 */
-    border-radius: 0;  /* 变为直角 */
-    border-top: none;  /* 移除顶部边框 */
-    border-left: none; /* 移除左右边框 */
-    border-right: none;
-    background: rgba(255, 255, 255, 0.9); /* 滚动后背景更实一点，防止文字干扰 */
-    box-shadow: 0 1px 0 rgba(0,0,0,0.05); /* 改为底部细微分割线 */
+    width: 100%;
+    max-width: 100%;
+    height: 64px;
+    border-radius: 0;
+    border: none;
+    background: rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(20px) saturate(180%) brightness(140%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(140%);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
 }
 
-/* 深色模式下的滚动适配 */
 @media (prefers-color-scheme: dark) {
-    header.scrolled {
-        background: rgba(20, 35, 35, 0.8);
-    }
     header.scrolled .navbar {
-        background: rgba(20, 35, 35, 0.95);
-        box-shadow: 0 1px 0 rgba(255,255,255,0.1);
+        background: rgba(20, 30, 30, 0.4);
+        backdrop-filter: blur(20px) saturate(180%) brightness(120%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%) brightness(120%);
+        box-shadow: 0 1px 0 rgba(255, 255, 255, 0.1);
     }
 }
+
+header.scrolled .nav-link {
+    color: var(--ios-text-primary);
+}
+header.scrolled .nav-link:hover {
+    background: rgba(13, 148, 136, 0.15);
+}
+
 /* --- 5. Hero 区域 --- */
 .hero {
     min-height: 100vh;
@@ -260,7 +289,7 @@ header.scrolled .navbar {
     align-items: center;
     justify-content: center;
     background: rgba(255, 255, 255, 0.6);
-    color: var(--ios-primary); /* 青色文字 */
+    color: var(--ios-primary);
     padding: 6px 16px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -278,12 +307,11 @@ header.scrolled .navbar {
     letter-spacing: -2px;
     margin-bottom: 15px;
     line-height: 1.1;
-    /* 标题改为青绿渐变 */
     background: linear-gradient(135deg, #0f766e 0%, #15803d 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-/* 深色模式下标题变亮 */
+
 @media (prefers-color-scheme: dark) {
     .hero-content h1 {
         background: linear-gradient(135deg, #2dd4bf 0%, #4ade80 100%);
@@ -347,7 +375,6 @@ header.scrolled .navbar {
 }
 
 .ios-btn-primary {
-    /* 按钮使用青绿渐变 */
     background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
     color: white;
     box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
@@ -376,7 +403,6 @@ section h2 {
     gap: 12px;
 }
 section h2 i {
-    /* 标题图标变为青色 */
     color: var(--ios-primary);
 }
 
@@ -414,7 +440,6 @@ section h2 i {
 .about-image { display: flex; justify-content: center; align-items: center; }
 .floating-icon { 
     font-size: 10rem; 
-    /* 装饰大图标颜色调整 */
     background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -428,7 +453,6 @@ section h2 i {
 .rule-card { text-align: left; }
 .rule-icon-bg { 
     width: 44px; height: 44px; 
-    /* 图标背景改为青绿渐变 */
     background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end)); 
     border-radius: 14px; 
     display: flex; align-items: center; justify-content: center; 
@@ -454,7 +478,7 @@ section h2 i {
 }
 .command-item code { 
     font-family: 'SF Mono', 'Courier New', monospace; 
-    color: var(--ios-primary); /* 代码颜色 */
+    color: var(--ios-primary);
     font-weight: 600; 
     font-size: 0.9rem; 
 }
@@ -535,8 +559,8 @@ section h2 i {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(13, 148, 136, 0.1); /* 极淡的青色背景 */
-    padding: 6px 6px 6px 14px; /* 右侧padding小一点，因为按钮自带间距 */
+    background: rgba(13, 148, 136, 0.1);
+    padding: 6px 6px 6px 14px;
     border-radius: 30px;
     border: 1px solid rgba(13, 148, 136, 0.2);
     margin-left: 10px;
@@ -549,11 +573,10 @@ section h2 i {
     box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
 }
 
-/* 用户名样式 */
 .user-name-span {
     font-size: 0.9rem;
     font-weight: 600;
-    color: var(--ios-primary); /* 使用主题青色 */
+    color: var(--ios-primary);
     max-width: 120px;
     white-space: nowrap;
     overflow: hidden;
@@ -562,7 +585,6 @@ section h2 i {
     vertical-align: middle;
 }
 
-/* 退出按钮样式 */
 .logout-btn-small {
     background: #ffffff;
     border: none;
@@ -573,7 +595,7 @@ section h2 i {
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #ef4444; /* 红色图标 */
+    color: #ef4444;
     transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
@@ -581,7 +603,7 @@ section h2 i {
 .logout-btn-small:hover {
     background: #ef4444;
     color: #ffffff;
-    transform: scale(1.1) rotate(90deg); /* 悬浮时旋转并变色 */
+    transform: scale(1.1) rotate(90deg);
     box-shadow: 0 4px 10px rgba(239, 68, 68, 0.3);
 }
 
@@ -589,7 +611,6 @@ section h2 i {
     font-size: 0.85rem;
 }
 
-/* 适配深色模式 */
 @media (prefers-color-scheme: dark) {
     .user-info-pill {
         background: rgba(45, 212, 191, 0.1);
@@ -601,4 +622,9 @@ section h2 i {
     .logout-btn-small {
         background: rgba(255, 255, 255, 0.1);
     }
+}
+
+
+.menu-toggle:active {
+    transform: scale(0.92);
 }

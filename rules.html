@@ -274,7 +274,7 @@
             }
         }
 
-        // HTML 转义防止 XSS
+
         function escapeHTML(str) {
             if (!str) return '';
             return str.toString().replace(/[&<>"']/g, match => ({

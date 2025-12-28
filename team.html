@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>筑界核心 - Contega 管理团队</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- 本页专属样式微调 -->
+    <style>
+        .team-page {
+            padding: 120px 20px 60px;
+            min-height: 100vh;
+        }
+        
+        .team-header {
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .team-header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, var(--ios-text-primary), var(--ios-primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+        
+        .team-header p {
+            color: var(--ios-text-secondary);
+            font-size: 1.2rem;
+            line-height: 1.6;
+        }
+
+        /* 网格布局 */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* 人员卡片 (每个卡片都是独立的毛玻璃) */
+        .member-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 40px 25px;
+            /* 这里不需要再写 glass-card 的样式，因为直接引用了类名 */
+        }
+
+        .avatar-wrapper {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin-bottom: 25px;
+            position: relative;
+            /* 渐变边框效果 */
+            background: linear-gradient(135deg, var(--ios-gradient-start), var(--ios-gradient-end));
+            padding: 4px; 
+            box-shadow: 0 15px 35px rgba(13, 148, 136, 0.2);
+        }
+
+        .avatar-inner {
+            width: 100%;
+            height: 100%;
+            background: #fff; /* 如果没有图片，背景色 */
+            border-radius: 50%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            color: var(--ios-primary);
+        }
+        
+        .avatar-inner img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .member-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--ios-text-primary);
+            margin-bottom: 5px;
+        }
+
+        .member-role {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--ios-primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .member-bio {
+            font-size: 0.95rem;
+            color: var(--ios-text-secondary);
+            line-height: 1.6;
+        }
+        
+        /* 标签 (如：OP, Builder) */
+        .role-badge {
+            margin-top: 15px;
+            padding: 4px 12px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: var(--ios-text-secondary);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. 背景 -->
+    <div class="ios-background-mesh"></div>
+
+    <header>
+        <!-- 2. 导航栏 -->
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>CONTEGA</span>
+                </a>
+            </div>
+            
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html" class="nav-link">返回主界</a></li>
+                <!-- 这里的登录按钮逻辑会由 script.js 自动填充 -->
+                <li id="auth-container" class="nav-item">
+                    <a href="login.html" class="nav-link btn-glass-sm">登录</a>
+                </li>
+            </ul>
+
+            <div class="menu-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+    <main class="team-page">
+        <div class="container">
+            
+            <div class="team-header animate">
+                <h1>筑界核心</h1>
+                <p>我们是一群热爱方块与逻辑的构建者。<br>致力于维护 Contega 的法则，确保每一个红石信号的精准传递。</p>
+            </div>
+
+            <div class="team-grid">
+                
+
+                <div class="glass-card member-card hover-lift animate">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-inner">
+                            <img src="images/wsfz.jpg" alt="wsfz">
+                        </div>
+                    </div>
+                    <h3 class="member-name">wsfz</h3>
+                    <span class="member-role">次席筑界师（owner）</span>
+                    <p class="member-bio">服务器架构总设计师，负责核心玩法制定与硬件维护。致力于打造极致性能的生电环境。。</p>
+                    <span class="role-badge">System Architect</span>
+                </div>
+
+                <div class="glass-card member-card hover-lift animate">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-inner">
+                            <img src="images/BetterMachao.jpg" alt="BetterMachao">
+                        </div>
+                    </div>
+                    <h3 class="member-name">BetterMachao</h3>
+                    <span class="member-role">执行官 (Admin)</span>
+                    <p class="member-bio">社区秩序的守护者，负责处理工单反馈与违规行为判定。确保界域内的公平与和谐。</p>
+                    <span class="role-badge">Community Lead</span>
+                </div>
+
+                <!-- 成员 4：建筑师 -->
+                <div class="glass-card member-card hover-lift animate">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-inner">
+                            <img src="images/BetterMachao.jpg" alt="BetterMachao">
+                        </div>
+                    </div>
+                    <h3 class="member-name"></h3>
+                    <span class="member-role"></span>
+                    <p class="member-bio"></p>
+                    <span class="role-badge">Design Lead</span>
+                </div>
+
+                <div class="glass-card member-card hover-lift animate">
+                    <div class="avatar-wrapper">
+                        <div class="avatar-inner">
+                            <!-- 有图片请用: <img src="images/owner.jpg" alt="头像"> -->
+                            <img src="images/silenecyuan.png" alt="Silence_yuan">
+                        </div>
+                    </div>
+                    <h3 class="member-name">Silence_yuan</h3>
+                    <span class="member-role">网站设计师</span>
+                    <p class="member-bio">官网的创造者和更新者。专注于网站的现代化，让网站的使用每一帧都是享受。</p>
+                    <span class="role-badge">Website Designer</span>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2025 Contega (筑界物语). Core Team.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

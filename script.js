@@ -8,7 +8,6 @@ const IS_PLAYER_LOGGED_IN = !!PLAYER_AUTH_TOKEN;
 const ADMIN_AUTH_TOKEN = localStorage.getItem('adminAuthToken');
 const IS_ADMIN_LOGGED_IN = !!ADMIN_AUTH_TOKEN;
 
-
 const SERVER_IP = '110.42.47.254'; 
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -35,13 +34,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /* --- 1. 基础 UI 交互 --- */
 function initializeBaseUI() {
-    // 移动端菜单切换
+    // 移动端菜单切换 + 汉堡菜单动画
     const menuToggle = document.querySelector('.menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
+
     if (menuToggle && navMenu) {
         menuToggle.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
+            // 切换 active 类（控制 × 动画和菜单显示）
             menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // 点击菜单项后自动关闭菜单（移动端）
+        document.querySelectorAll('.nav-menu .nav-item a').forEach(link => {
+            link.addEventListener('click', () => {
+                if (navMenu.classList.contains('active')) {
+                    menuToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                }
+            });
         });
     }
 
@@ -55,8 +66,8 @@ function initializeBaseUI() {
                 
                 // 移动端点击后自动收起菜单
                 if (navMenu && navMenu.classList.contains('active')) {
+                    menuToggle.classList.remove('active');
                     navMenu.classList.remove('active');
-                    if (menuToggle) menuToggle.classList.remove('active');
                 }
 
                 if (targetElement) {
@@ -74,11 +85,11 @@ function initializeBaseUI() {
         }
     });
 
-    // 导航栏滚动吸附效果 (Smart Sticky Header)
+    // 导航栏滚动吸附效果 + Liquid Glass 效果
     const header = document.querySelector('header');
     if (header) {
         window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
+            if (window.scrollY > 100) {  // 滚动超过 100px 时触发 Liquid Glass
                 header.classList.add('scrolled');
             } else {
                 header.classList.remove('scrolled');
