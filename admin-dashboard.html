@@ -124,6 +124,9 @@
         .btn-reply { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
         .btn-reply:hover { background: #3b82f6; color: white; transform: scale(1.05); }
 
+        .btn-edit { background: rgba(234, 179, 8, 0.1); color: #eab308; }
+        .btn-edit:hover { background: #eab308; color: white; transform: scale(1.05); }
+
         /* --- 状态标签 --- */
         .status-badge {
             padding: 4px 10px;
@@ -157,7 +160,7 @@
         }
         .modal-overlay.active .modal-card { transform: scale(1); }
 
-        /* --- 修复后的模态框输入框样式 --- */
+        /* --- 模态框输入框样式 --- */
         .modal-card .ios-input {
             width: 100%;
             padding: 12px 16px;
@@ -255,14 +258,14 @@
                 </div>
             </div>
 
-            <!-- 2. 公告管理视图 -->
+            <!-- 2. 公告管理视图（新增权重列和编辑功能） -->
             <div id="view-announcements" class="view-section">
                 <div class="toolbar">
                     <button class="ios-btn-primary" onclick="openModal('announceModal')"><i class="fas fa-plus"></i> 发布公告</button>
                 </div>
                 <div class="admin-table-container">
                     <table class="admin-table">
-                        <thead><tr><th>发布时间</th><th>标题</th><th>内容摘要</th><th style="text-align:right;">操作</th></tr></thead>
+                        <thead><tr><th>发布时间</th><th>标题</th><th>内容摘要</th><th>权重</th><th style="text-align:right;">操作</th></tr></thead>
                         <tbody id="announceTableBody"></tbody>
                     </table>
                 </div>
@@ -272,17 +275,17 @@
             <div id="view-users" class="view-section">
                 <div class="admin-table-container">
                     <table class="admin-table">
-                        <thead><tr><th>ID</th><th>玩家名</th><th>邮箱</th><th>建筑表权限</th><th style="text-align:right;">操作</th></tr></thead>
+                        <thead><tr><th>ID</th><th>玩家名</th><th>邮箱</th><th>权限状态</th><th style="text-align:right;">操作</th></tr></thead>
                         <tbody id="usersTableBody"></tbody>
                     </table>
                 </div>
             </div>
 
-            <!-- 4. 工单处理视图 -->
+            <!-- 4. 工单管理视图 -->
             <div id="view-tickets" class="view-section">
                 <div class="admin-table-container">
                     <table class="admin-table">
-                        <thead><tr><th>提交时间</th><th>玩家</th><th>反馈内容</th><th style="text-align:right;">操作</th></tr></thead>
+                        <thead><tr><th>提交时间</th><th>玩家</th><th>消息</th><th style="text-align:right;">操作</th></tr></thead>
                         <tbody id="ticketsTableBody"></tbody>
                     </table>
                 </div>
@@ -291,70 +294,91 @@
         </div>
     </main>
 
-    <!-- 模态框: 新增规则 -->
+    <!-- 模态框：新增规则 -->
     <div id="ruleModal" class="modal-overlay">
         <div class="modal-card">
-            <h3 style="margin-bottom: 20px; color: var(--ios-primary); font-size: 1.4rem;">新增界域法则</h3>
+            <h2 style="font-size: 1.5rem; margin-bottom: 20px; color: var(--ios-text-primary);">新增法则</h2>
             <form id="addRuleForm">
-                <div style="margin-bottom: 20px;">
-                    <label>规则内容</label>
-                    <textarea id="ruleContent" class="ios-input" rows="3" required placeholder="例如：禁止在主城区域进行PVP..."></textarea>
-                </div>
-                <div style="margin-bottom: 25px;">
-                    <label>惩罚措施</label>
-                    <input type="text" id="rulePunishment" class="ios-input" placeholder="例如：封禁 3 天">
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="ios-btn-secondary" onclick="closeModal('ruleModal')" style="border:none; background: rgba(0,0,0,0.05);">取消</button>
-                    <button type="submit" class="ios-btn-primary" style="padding: 10px 24px;">保存</button>
+                <label for="ruleContent">规则内容</label>
+                <input type="text" id="ruleContent" class="ios-input" placeholder="请输入规则描述..." required>
+                
+                <label for="rulePunishment">惩罚措施 (可选)</label>
+                <input type="text" id="rulePunishment" class="ios-input" placeholder="例如: 警告 / 封禁...">
+                
+                <div style="display: flex; gap: 15px; margin-top: 25px;">
+                    <button type="button" onclick="closeModal('ruleModal')" class="ios-btn-secondary full-width">取消</button>
+                    <button type="submit" class="ios-btn-primary full-width">保存</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- 模态框: 发布公告 -->
+    <!-- 模态框：新增公告（新增权重选择） -->
     <div id="announceModal" class="modal-overlay">
         <div class="modal-card">
-            <h3 style="margin-bottom: 20px; color: var(--ios-primary); font-size: 1.4rem;">发布全服公告</h3>
+            <h2 style="font-size: 1.5rem; margin-bottom: 20px; color: var(--ios-text-primary);">发布公告</h2>
             <form id="addAnnounceForm">
-                <div style="margin-bottom: 20px;">
-                    <label>公告标题</label>
-                    <input type="text" id="announceTitle" class="ios-input" required placeholder="例如：服务器维护通知">
-                </div>
-                <div style="margin-bottom: 25px;">
-                    <label>公告内容</label>
-                    <textarea id="announceContent" class="ios-input" rows="5" required placeholder="输入公告详情..."></textarea>
-                </div>
-                <div style="display: flex; gap: 12px; justify-content: flex-end;">
-                    <button type="button" class="ios-btn-secondary" onclick="closeModal('announceModal')" style="border:none; background: rgba(0,0,0,0.05);">取消</button>
-                    <button type="submit" class="ios-btn-primary" style="padding: 10px 24px;">发布</button>
+                <label for="announceTitle">标题</label>
+                <input type="text" id="announceTitle" class="ios-input" placeholder="请输入公告标题..." required>
+                
+                <label for="announceContent">内容</label>
+                <textarea id="announceContent" class="ios-input" placeholder="请输入公告内容..." required></textarea>
+                
+                <label for="announcePriority">权重 (影响显示优先级)</label>
+                <select id="announcePriority" class="ios-input">
+                    <option value="0">0 - 普通</option>
+                    <option value="1">1 - 更新</option>
+                    <option value="2">2 - 维护</option>
+                    <option value="3">3 - 重要</option>
+                </select>
+                
+                <div style="display: flex; gap: 15px; margin-top: 25px;">
+                    <button type="button" onclick="closeModal('announceModal')" class="ios-btn-secondary full-width">取消</button>
+                    <button type="submit" class="ios-btn-primary full-width">发布</button>
                 </div>
             </form>
         </div>
     </div>
 
+    <!-- 新增模态框：编辑公告（含权重） -->
+    <div id="editAnnounceModal" class="modal-overlay">
+        <div class="modal-card">
+            <h2 style="font-size: 1.5rem; margin-bottom: 20px; color: var(--ios-text-primary);">编辑公告</h2>
+            <form id="editAnnounceForm">
+                <input type="hidden" id="editAnnounceId">
+                
+                <label for="editAnnounceTitle">标题</label>
+                <input type="text" id="editAnnounceTitle" class="ios-input" required>
+                
+                <label for="editAnnounceContent">内容</label>
+                <textarea id="editAnnounceContent" class="ios-input" required></textarea>
+                
+                <label for="editAnnouncePriority">权重</label>
+                <select id="editAnnouncePriority" class="ios-input">
+                    <option value="0">0 - 普通</option>
+                    <option value="1">1 - 更新</option>
+                    <option value="2">2 - 维护</option>
+                    <option value="3">3 - 重要</option>
+                </select>
+                
+                <div style="display: flex; gap: 15px; margin-top: 25px;">
+                    <button type="button" onclick="closeModal('editAnnounceModal')" class="ios-btn-secondary full-width">取消</button>
+                    <button type="submit" class="ios-btn-primary full-width">保存更改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- JS 脚本 -->
     <script>
         const adminToken = localStorage.getItem('adminAuthToken');
+        if (!adminToken) { window.location.href = 'login.html'; }
 
-        // 初始化
-        document.addEventListener('DOMContentLoaded', () => {
-            if (!adminToken) {
-                alert('未检测到管理员密钥，请登录。');
-                window.location.href = 'admin-login.html';
-                return;
-            }
-            // 默认加载第一个标签页的数据
-            loadData('rules');
-        });
-
-        // 切换标签页
+        // 切换标签
         function switchTab(tabName) {
-            // 更新按钮状态
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.view-section').forEach(sec => sec.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            
-            // 更新视图
-            document.querySelectorAll('.view-section').forEach(view => view.classList.remove('active'));
             document.getElementById(`view-${tabName}`).classList.add('active');
             
             // 加载数据
@@ -373,7 +397,6 @@
             tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--ios-text-secondary);"><i class="fas fa-circle-notch fa-spin"></i> 数据同步中...</td></tr>';
 
             try {
-                // 根据类型决定 API 路径
                 let url = '';
                 if (type === 'rules') url = '/api/rules'; 
                 else if (type === 'announcements') url = '/api/announcements'; 
@@ -405,7 +428,6 @@
 
             tbody.innerHTML = data.map(item => {
                 if (type === 'rules') {
-                    // 兼容旧数据结构，如果 content 里没有惩罚，则显示惩罚字段
                     const content = escapeHTML(item.content);
                     const punishment = escapeHTML(item.punishment || '无');
                     return `
@@ -420,13 +442,16 @@
                             </td>
                         </tr>`;
                 } else if (type === 'announcements') {
+                    const priorityDesc = getPriorityDesc(item.priority);
                     return `
                         <tr>
                             <td>${new Date(item.created_at || Date.now()).toLocaleDateString()}</td>
                             <td style="font-weight:600;">${escapeHTML(item.title)}</td>
                             <td>${escapeHTML(item.content).substring(0, 30)}...</td>
+                            <td><span class="status-badge">${item.priority} (${priorityDesc})</span></td>
                             <td>
                                 <div class="action-group">
+                                    <button class="btn-icon btn-edit" onclick="openEditAnnounce(${item.id}, '${escapeHTML(item.title)}', '${escapeHTML(item.content)}', ${item.priority})" title="编辑"><i class="fas fa-edit"></i></button>
                                     <button class="btn-icon btn-delete" onclick="deleteItem('announcements', ${item.id})"><i class="fas fa-trash"></i></button>
                                 </div>
                             </td>
@@ -469,6 +494,16 @@
             }).join('');
         }
 
+        // 权重描述函数
+        function getPriorityDesc(priority) {
+            switch (priority) {
+                case 3: return '重要';
+                case 2: return '维护';
+                case 1: return '更新';
+                default: return '普通';
+            }
+        }
+
         // --- 通用删除逻辑 ---
         async function deleteItem(endpointType, id) {
             if (!confirm('确定要执行删除操作吗？此操作不可逆。')) return;
@@ -482,9 +517,7 @@
                 // 刷新当前视图
                 const activeTab = document.querySelector('.view-section.active').id.replace('view-', '');
                 loadData(activeTab);
-            } catch (e) {
-                alert(e.message);
-            }
+            } catch (e) { alert(e.message); }
         }
 
         // --- 权限管理 ---
@@ -504,10 +537,41 @@
                 });
                 if (!response.ok) throw new Error('权限变更失败');
                 loadData('users');
-            } catch (e) {
-                alert(e.message);
-            }
+            } catch (e) { alert(e.message); }
         }
+
+        // --- 打开编辑公告模态 ---
+        function openEditAnnounce(id, title, content, priority) {
+            document.getElementById('editAnnounceId').value = id;
+            document.getElementById('editAnnounceTitle').value = title;
+            document.getElementById('editAnnounceContent').value = content;
+            document.getElementById('editAnnouncePriority').value = priority;
+            openModal('editAnnounceModal');
+        }
+
+        // --- 编辑公告提交 ---
+        document.getElementById('editAnnounceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button[type="submit"]');
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            const id = document.getElementById('editAnnounceId').value;
+            const title = document.getElementById('editAnnounceTitle').value;
+            const content = document.getElementById('editAnnounceContent').value;
+            const priority = document.getElementById('editAnnouncePriority').value;
+
+            try {
+                const response = await fetch(`/api/admin/announcements/${id}`, {
+                    method: 'PATCH', // 或 PUT，根据你的后端
+                    headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ title, content, priority })
+                });
+                if (!response.ok) throw new Error('更新失败');
+                closeModal('editAnnounceModal');
+                loadData('announcements');
+            } catch (e) { alert(e.message); }
+            finally { btn.innerHTML = '保存更改'; }
+        });
 
         // --- 模态框控制 ---
         function openModal(id) { document.getElementById(id).classList.add('active'); }
@@ -536,7 +600,7 @@
             finally { btn.innerHTML = '保存'; }
         });
 
-        // --- 表单提交: 发布公告 ---
+        // --- 表单提交: 发布公告（新增 priority） ---
         document.getElementById('addAnnounceForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = e.target.querySelector('button[type="submit"]');
@@ -544,12 +608,13 @@
 
             const title = document.getElementById('announceTitle').value;
             const content = document.getElementById('announceContent').value;
+            const priority = document.getElementById('announcePriority').value;
 
             try {
                 const response = await fetch('/api/admin/announcements', {
                     method: 'POST',
                     headers: { 'Authorization': `Bearer ${adminToken}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ title, content })
+                    body: JSON.stringify({ title, content, priority })
                 });
                 if (!response.ok) throw new Error('发布失败');
                 closeModal('announceModal');
@@ -568,6 +633,9 @@
             if (!str) return '';
             return str.toString().replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','\"':'&quot;','\'':'&#39;'}[m]));
         }
+
+        // 初始化加载第一个标签
+        loadData('rules');
     </script>
 </body>
 </html>

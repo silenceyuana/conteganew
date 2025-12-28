@@ -253,12 +253,28 @@ app.delete('/api/admin/rules/:id', verifyToken, checkAdmin, async (req, res) => 
 
 // --- [新] 公告管理 API ---
 app.post('/api/admin/announcements', verifyToken, checkAdmin, async (req, res) => {
-    const { title, content } = req.body;
+    const { title, content, priority = 0 } = req.body; // 默认 0
     if (!title || !content) return res.status(400).json({ error: '标题和内容不能为空' });
     try {
-        await pool.execute('INSERT INTO announcements (title, content) VALUES (?, ?)', [title, content]);
+        await pool.execute('INSERT INTO announcements (title, content, priority) VALUES (?, ?, ?)', [title, content, priority]);
         res.json({ message: '公告发布成功' });
     } catch (err) { res.status(500).json({ error: '发布公告失败' }); }
+});
+
+app.patch('/api/admin/announcements/:id', verifyToken, checkAdmin, async (req, res) => {
+    const { title, content, priority } = req.body;
+    const id = req.params.id;
+
+    try {
+        await pool.execute(
+            'UPDATE announcements SET title = ?, content = ?, priority = ? WHERE id = ?',
+            [title, content, priority, id]
+        );
+        res.json({ message: '公告更新成功' });
+    } catch (err) { 
+        console.error(err);
+        res.status(500).json({ error: '更新失败' }); 
+    }
 });
 
 app.delete('/api/admin/announcements/:id', verifyToken, checkAdmin, async (req, res) => {
