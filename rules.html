@@ -226,16 +226,7 @@
                     card.style.opacity = '0';
                     card.style.animation = `fadeInUp 0.6s ease forwards ${index * 0.1}s`;
 
-                    // 构建 HTML 内容
-                    // 我们会尝试适配您的数据库字段。
-                    // 假设数据库字段为: content (规则描述), punishment (惩罚), category (可选)
-                    // 如果您现在的表结构比较简单，只有 content，我们可以做一些简单的解析或直接显示
-                    
-                    // 为了演示效果，我们假设 rule 对象有 content 字段
-                    // 我们把 content 当做标题+描述的混合体，或者根据您的实际字段调整
-                    
-                    // 如果您的数据库是 server_rules 表，通常有 content 字段。
-                    // 这里做一个简单的处理：如果 content 包含冒号，冒号前为标题，后为描述。
+
                     
                     let title = `法则 #${String(index + 1).padStart(2, '0')}`;
                     let description = rule.content || rule.description || "暂无描述";
