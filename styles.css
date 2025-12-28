@@ -635,3 +635,64 @@ section h2 i {
 .menu-toggle:active {
     transform: scale(0.92);
 }
+
+/* ===== 公告页面专用（仿 rules 风格） ===== */
+.announcement-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.announcement-date {
+    font-size: 0.9rem;
+    color: var(--ios-text-secondary);
+}
+
+.announcement-tag {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.announcement-tag.important {
+    background: linear-gradient(135deg, #ef4444, #f97316);
+    color: white;
+}
+
+.announcement-tag.maintenance {
+    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    color: white;
+}
+
+.announcement-tag.update {
+    background: linear-gradient(135deg, #10b981, #34d399);
+    color: white;
+}
+
+.rule-card-title {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+    color: var(--ios-text-primary);
+}
+
+.rule-card-content {
+    font-size: 0.95rem;
+    color: var(--ios-text-secondary);
+    line-height: 1.7;
+}
+
+/* 加载/错误占位 */
+.loading-placeholder, .error-placeholder {
+    text-align: center;
+    padding: 60px 20px;
+    font-size: 1.1rem;
+    color: var(--ios-text-secondary);
+}
+
+.loading-placeholder i, .error-placeholder i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    color: var(--ios-primary);
+}

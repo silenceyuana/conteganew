@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>筑界物语 CONTEGA - 服务器公告</title>
+    <link rel="stylesheet" href="styles.css"> <!-- 或 styles-chunjie.css -->
+    <link rel="icon" type="image/x-icon" href="images/1.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- 动态流体背景 -->
+    <div class="ios-background-mesh"></div>
+
+    <!-- 导航栏（与 rules.html 完全一致） -->
+    <header>
+        <nav class="navbar">
+            <div class="nav-logo">
+                <a href="index.html">
+                    <i class="fas fa-cube"></i>
+                    <span>CONTEGA</span>
+                </a>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="index.html#home" class="nav-link">主页</a></li>
+                <li class="nav-item"><a href="index.html#about" class="nav-link">配置</a></li>
+                <li class="nav-item"><a href="rules.html" class="nav-link">法则</a></li>
+                <li class="nav-item"><a href="index.html#commands" class="nav-link">指令</a></li>
+                <li class="nav-item"><a href="announcements.html" class="nav-link active">公告</a></li>
+                <li class="nav-item"><a href="sponsors.html" class="nav-link">供奉</a></li>
+                <li class="nav-item"><a href="index.html#contact" class="nav-link">连接</a></li>
+                <li id="auth-container" class="nav-item">
+                    <a href="login.html" class="nav-link btn-glass-sm">登录</a>
+                </li>
+            </ul>
+            <div class="menu-toggle">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </nav>
+    </header>
+
+    <!-- 英雄区（仿 rules-hero） -->
+    <section class="hero rules-hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">最新动态</div>
+                <h1>服务器公告 <span class="en-title">ANNOUNCEMENTS</span></h1>
+                <p class="hero-subtitle">筑界物语的实时更新、活动通知与重要维护信息。</p>
+                
+                <div class="server-status-container">
+                    <span class="status-dot pulsing"></span>
+                    <span>公告中心 · 实时同步</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 公告列表（仿 rules-grid） -->
+    <div class="container">
+        <!-- 总览卡片 -->
+        <div class="glass-card full-width">
+            <h2><i class="fas fa-bell"></i> 公告总览</h2>
+            <div class="rules-overview-grid">
+                <div class="overview-item">
+                    <i class="fas fa-bullhorn"></i>
+                    <span>实时更新</span>
+                </div>
+                <div class="overview-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>最新置顶</span>
+                </div>
+                <div class="overview-item">
+                    <i class="fas fa-history"></i>
+                    <span>历史记录</span>
+                </div>
+                <div class="overview-item">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>自动刷新</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 公告卡片列表 -->
+        <section class="rules-section">
+            <div id="announcements-list" class="rules-grid">
+                <!-- 动态插入公告卡片 -->
+                <div class="loading-placeholder glass-card hover-lift">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>正在加载最新公告...</p>
+                </div>
+            </div>
+
+            <!-- 无公告提示 -->
+            <div id="no-announcements" class="glass-card full-width" style="display: none; text-align: center; padding: 40px;">
+                <i class="fas fa-bell-slash" style="font-size: 3rem; color: var(--ios-text-secondary); margin-bottom: 16px;"></i>
+                <h3>暂无公告</h3>
+                <p>请关注 QQ 群获取最新消息</p>
+            </div>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2025 Contega (筑界物语) · 公告由中枢系统实时推送 | Design by Silence_yuan</p>
+                <div class="social-links">
+                    <a href="https://qm.qq.com/q/LJir0hQS40" class="glass-icon"><i class="fab fa-qq"></i></a>
+                    <a href="https://space.bilibili.com/3546611829443402" class="glass-icon"><i class="fab fa-bilibili"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+ <script>
+    // 汉堡菜单切换（与主页一致）
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    menuToggle.addEventListener('click', () => {
+        menuToggle.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+
+    // 动态加载公告（从新到旧）
+    async function loadAnnouncements() {
+        const listContainer = document.getElementById('announcements-list');
+        const noAnnouncements = document.getElementById('no-announcements');
+
+        try {
+            const response = await fetch('/api/announcements');
+            if (!response.ok) throw new Error('网络响应失败');
+
+            let announcements = await response.json();
+
+            // 显式前端排序（确保最新在上，即使后端没排）
+            announcements.sort((a, b) => {
+                return new Date(b.created_at) - new Date(a.created_at);
+            });
+
+            listContainer.innerHTML = ''; // 清空加载中
+
+            if (announcements.length === 0) {
+                noAnnouncements.style.display = 'block';
+                return;
+            }
+
+            announcements.forEach(ann => {
+                const card = document.createElement('div');
+                card.className = 'rule-card glass-card hover-lift';
+
+                const date = new Date(ann.created_at).toLocaleDateString('zh-CN', {
+                    year: 'numeric', month: 'long', day: 'numeric'
+                });
+
+                // 标签判断
+                let tagClass = 'update';
+                let tagText = '更新';
+                if (ann.title.includes('维护') || ann.title.includes('停服')) {
+                    tagClass = 'maintenance';
+                    tagText = '维护';
+                } else if (ann.title.includes('重要') || ann.title.includes('活动')) {
+                    tagClass = 'important';
+                    tagText = '重要';
+                }
+
+                card.innerHTML = `
+                    <div class="rule-icon-bg">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <div class="announcement-header">
+                        <span class="announcement-date">${date}</span>
+                        <span class="announcement-tag ${tagClass}">${tagText}</span>
+                    </div>
+                    <h3 class="rule-card-title">${ann.title}</h3>
+                    <p class="rule-card-content">
+                        ${ann.content.replace(/\n/g, '<br>')}
+                    </p>
+                `;
+
+                listContainer.appendChild(card);
+            });
+        } catch (error) {
+            console.error('加载失败:', error);
+            listContainer.innerHTML = `
+                <div class="glass-card error-placeholder">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>加载公告失败，请稍后重试</p>
+                </div>
+            `;
+        }
+    }
+
+    // 页面加载时执行
+    window.addEventListener('load', loadAnnouncements);
+</script>
+</body>
+</html>
